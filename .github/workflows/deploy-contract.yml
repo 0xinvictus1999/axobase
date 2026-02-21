@@ -1,0 +1,172 @@
+name: Deploy FeralRite Contract
+
+on:
+  # 手动触发
+  workflow_dispatch:
+  
+  # 推送到 main 分支时自动触发
+  push:
+    branches: [ main ]
+    paths:
+      - 'contracts/**'
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+
+    name: Foundry project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Run Forge build
+        run: |
+          cd contracts
+          forge --version
+          forge build --sizes
+        id: build
+
+      - name: Run Forge tests
+        run: |
+          cd contracts
+          forge test -vvv --fork-url https://sepolia.base.org
+        id: test
+
+  deploy:
+    needs: check
+    name: Deploy to Base Sepolia
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Install dependencies
+        run: |
+          cd contracts
+          forge install
+
+      - name: Deploy FeralRite
+        env:
+          PRIVATE_KEY: ${{ secrets.BASE_SEPOLIA_PRIVATE_KEY }}
+          RPC_URL: ${{ secrets.BASE_SEPOLIA_RPC }}
+        run: |
+          cd contracts
+          echo "Deploying to Base Sepolia..."
+          echo "Chain ID: 84532"
+          echo ""
+          
+          # 执行部署脚本
+          forge script script/Deploy.s.sol \
+            --rpc-url $RPC_URL \
+            --broadcast \
+            --private-key $PRIVATE_KEY \
+            -vvvv 2>&1 | tee deploy_output.txt
+          
+          echo ""
+          echo "========================================"
+          echo "Deployment completed!"
+          echo "========================================"
+        id: deploy
+
+      - name: Extract Contract Address
+        run: |
+          cd contracts
+          
+          # 从部署输出中提取合约地址
+          CONTRACT_ADDRESS=$(grep -oP 'Contract Address:\s*\K0x[a-fA-F0-9]{40}' deploy_output.txt || echo "")
+          
+          if [ -z "$CONTRACT_ADDRESS" ]; then
+            echo "⚠️ Could not extract contract address from output"
+            echo "Please check the deployment logs above"
+          else
+            echo ""
+            echo "🎉 CONTRACT DEPLOYED SUCCESSFULLY!"
+            echo ""
+            echo "Contract Address: $CONTRACT_ADDRESS"
+            echo ""
+            echo "View on Explorer:"
+            echo "https://sepolia.basescan.org/address/$CONTRACT_ADDRESS"
+            echo ""
+            
+            # 保存到环境变量供后续步骤使用
+            echo "CONTRACT_ADDRESS=$CONTRACT_ADDRESS" >> $GITHUB_ENV
+          fi
+
+      - name: Upload Deployment Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-info
+          path: |
+            contracts/broadcast/deploy-*.json
+            contracts/deploy_output.txt
+          retention-days: 30
+
+      - name: Update Repository Variables
+        if: env.CONTRACT_ADDRESS != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const contractAddress = process.env.CONTRACT_ADDRESS;
+            
+            // 创建或更新仓库变量
+            try {
+              await github.rest.actions.createRepoVariable({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: 'FERALRITE_CONTRACT_ADDRESS',
+                value: contractAddress
+              });
+              console.log(`✅ Contract address saved: ${contractAddress}`);
+            } catch (error) {
+              // 如果已存在则更新
+              if (error.status === 422) {
+                await github.rest.actions.updateRepoVariable({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'FERALRITE_CONTRACT_ADDRESS',
+                  value: contractAddress
+                });
+                console.log(`✅ Contract address updated: ${contractAddress}`);
+              } else {
+                console.log('Note: Could not save to repository variables');
+                console.log(`Contract Address: ${contractAddress}`);
+              }
+            }
+
+      - name: Comment on Commit
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const contractAddress = process.env.CONTRACT_ADDRESS;
+            if (contractAddress) {
+              github.rest.repos.createCommitComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: context.sha,
+                body: `🦞 FeralRite Contract Deployed!\n\n` +
+                      `**Address:** \`${contractAddress}\`\n` +
+                      `**Network:** Base Sepolia (Chain ID: 84532)\n` +
+                      `**Explorer:** https://sepolia.basescan.org/address/${contractAddress}\n\n` +
+                      `⚠️ This is a testnet deployment.`
+              });
+            }
