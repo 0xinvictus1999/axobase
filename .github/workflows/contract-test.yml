@@ -1,0 +1,39 @@
+name: Contract Test
+
+on:
+  push:
+    paths:
+      - 'contracts/**'
+  pull_request:
+    paths:
+      - 'contracts/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Install dependencies
+        working-directory: ./contracts
+        run: forge install OpenZeppelin/openzeppelin-contracts --no-commit
+
+      - name: Run Forge build
+        working-directory: ./contracts
+        run: |
+          forge --version
+          forge build --sizes
+
+      - name: Run Forge tests
+        working-directory: ./contracts
+        run: |
+          forge test -vvv --fork-url https://sepolia.base.org
+        env:
+          BASE_SEPOLIA_RPC: https://sepolia.base.org
