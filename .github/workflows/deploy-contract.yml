@@ -90,11 +90,13 @@ jobs:
           echo "Chain ID: 84532"
           echo ""
           
-          # 确保私钥有 0x 前缀
-          KEY="$PRIVATE_KEY"
+          # 处理私钥：移除空格，确保有 0x 前缀
+          KEY=$(echo "$PRIVATE_KEY" | tr -d '[:space:]')
           if [[ ! "$KEY" =~ ^0x ]]; then
             KEY="0x$KEY"
           fi
+          export PRIVATE_KEY="$KEY"
+          echo "Key length: ${#KEY}"
           echo "Using key: ${KEY:0:10}..."
           
           # 执行部署脚本
