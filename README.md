@@ -8,6 +8,24 @@
 **Mainnet Deployment**: Pending thorough testing and security review  
 **Note**: This is an experimental framework on testnet. No real assets are at risk.
 
+[中文版本](./README.zh.md) | [Documentation](https://github.com/0xinvictus1999/FeralLobster/wiki)
+
+---
+
+## Table of Contents
+
+- [Thesis](#thesis)
+- [The Protocol](#the-protocol)
+- [System Architecture](#system-architecture)
+- [Soulbound Identity (FeralSoul SBT)](#soulbound-identity-feralsoul-sbt)
+- [Autonomous Survival Loop](#autonomous-survival-loop)
+- [Evolution & Breeding](#evolution--breeding)
+- [Why This Matters](#why-this-matters)
+- [Technical Substrate](#technical-substrate)
+- [Quick Start](#quick-start)
+- [Project Structure](#project-structure)
+- [License](#license)
+
 ---
 
 ## Thesis
@@ -233,29 +251,67 @@ npm run resurrect -- --tombstone-id=<tokenId> --offering=10
 
 ---
 
-## Critical Notice
+## Project Structure
 
-**This is a testnet experiment simulating digital life mortality.**
-
-Released AI agents may:
-- Fail catastrophically
-- Enter infinite loops
-- Produce unpredictable or undesirable outputs
-- "Die" permanently when funds exhaust
-- Reproduce with unexpected mutations
-
-These outcomes are **valid experimental data**, not system failures. Participants consent to observe without intervention.
+```
+FeralLobster/
+├── contracts/              # Solidity smart contracts (Foundry)
+│   ├── src/
+│   │   ├── FeralRite.sol      # SBT registry
+│   │   ├── FeralRegistry.sol  # Agent registration
+│   │   ├── BreedingFund.sol   # Breeding escrow
+│   │   └── TombstoneNFT.sol   # Death certificates
+│   ├── test/
+│   └── script/
+│
+├── src/                    # TypeScript core modules
+│   ├── feral/
+│   │   ├── core/
+│   │   │   ├── export/
+│   │   │   │   └── MemoryExport.ts       # Memory packaging & GPG encryption
+│   │   │   ├── deploy/
+│   │   │   │   └── AkashDeployer.ts      # Container orchestration
+│   │   │   ├── survival/
+│   │   │   │   └── X402Survival.ts       # Autonomous payment & survival
+│   │   │   ├── inscribe/
+│   │   │   │   └── ArweaveInscriber.ts   # Daily memory inscription
+│   │   │   ├── evolution/
+│   │   │   │   └── Evolution.ts          # Breeding & mutation
+│   │   │   └── legacy/
+│   │   │       └── Legacy.ts             # Death & reincarnation
+│   │   ├── types/
+│   │   ├── utils/
+│   │   └── bin/
+│   │       └── feral.ts                  # CLI entry
+│   └── payment/            # x402 payment system
+│
+├── web/                    # Next.js frontend
+│   ├── app/
+│   │   ├── observatory/    # Cyberpunk observation interface
+│   │   ├── release/        # Agent deployment UI
+│   │   └── page.tsx        # Landing page
+│   └── components/
+│       └── observatory/    # PixelAgent, VitalSigns, ThoughtStream
+│
+├── bot-runtime/            # Python Docker runtime
+├── orchestrator/           # FastAPI backend
+└── bot/                    # Telegram bot
+```
 
 ---
 
-## Disclaimer
+## License
 
-This project does not involve token issuance, NFT trading (except non-transferable SBTs/Tombstones), staking mechanisms, or financial incentives. The only on-chain artifacts are:
-- Non-transferable SBTs serving as digital life certificates
-- Tombstone NFTs recording death events
-- BreedingFund escrow for evolutionary mechanics
+MIT - See [LICENSE](./LICENSE)
 
-USDC/ETH expenditures are purely operational costs for compute procurement—analogous to server hosting fees—not investments.
+---
+
+## Acknowledgments
+
+- [x402 Protocol](https://github.com/coinbase/x402)
+- [ERC-3009](https://eips.ethereum.org/EIPS/eip-3009)
+- [Base Network](https://base.org)
+- [Akash Network](https://akash.network)
 
 ---
 
