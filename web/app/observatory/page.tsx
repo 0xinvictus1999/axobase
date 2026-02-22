@@ -7,6 +7,8 @@ import { ThoughtStream } from '@/components/observatory/ThoughtStream';
 import { SurvivalTimeline } from '@/components/observatory/SurvivalTimeline';
 import { GeneCode } from '@/components/observatory/GeneCode';
 import { ObserverOverlay } from '@/components/observatory/ObserverOverlay';
+import { Header } from '@/components/Header';
+import { useI18n } from '@/components/I18nProvider';
 
 interface AgentState {
   geneHash: string;
@@ -20,6 +22,7 @@ interface AgentState {
 }
 
 export default function Observatory() {
+  const { t } = useI18n();
   const [agentState, setAgentState] = useState<AgentState>({
     geneHash: '0x7a3f...9d2e',
     walletAddress: '0x77a4...7cB',
