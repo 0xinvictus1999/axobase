@@ -72,3 +72,101 @@ body {
   background: linear-gradient(90deg, #ff0044, #ff3366);
   transition: width 3s linear;
 }
+
+/* Observatory - Cyberpunk Styles */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+.font-mono {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* Custom Scrollbar for Observatory */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #050a0f;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #00ff9d40;
+  border-radius: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #00ff9d80;
+}
+
+/* Glitch Effect */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.glitch {
+  animation: glitch 0.3s ease-in-out;
+}
+
+/* Flicker Animation */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.flicker {
+  animation: flicker 2s ease-in-out infinite;
+}
+
+/* Scan Line Animation */
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.scan-line {
+  animation: scan 4s linear infinite;
+}
+
+/* Pulse Border */
+@keyframes pulse-border {
+  0%, 100% { border-color: rgba(0, 255, 157, 0.3); }
+  50% { border-color: rgba(0, 255, 157, 0.8); }
+}
+
+.pulse-border {
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+/* Data Stream Background */
+.data-stream {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 255, 157, 0.03) 50%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: dataStream 10s linear infinite;
+}
+
+@keyframes dataStream {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 200%; }
+}
+
+/* Selection Color */
+::selection {
+  background: rgba(0, 255, 157, 0.3);
+  color: #00ff9d;
+}
+
+/* Focus Visible */
+*:focus-visible {
+  outline: 1px solid #00ff9d;
+  outline-offset: 2px;
+}

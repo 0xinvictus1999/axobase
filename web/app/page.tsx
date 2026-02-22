@@ -28,6 +28,12 @@ export default function Home() {
             >
               🚀 开始放养
             </Link>
+            <Link
+              href="/observatory"
+              className="px-8 py-4 bg-slate-800 border border-cyber-green/50 rounded-lg font-semibold text-cyber-green hover:bg-cyber-green/10 transition-all"
+            >
+              👁️ 观察舱
+            </Link>
             <a
               href="https://github.com/0xinvictus1999/FeralLobster"
               target="_blank"

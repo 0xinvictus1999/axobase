@@ -19,6 +19,15 @@ const config: Config = {
           purple: '#b829dd',
           green: '#00ff9d',
           red: '#ff0044',
+        },
+        cyber: {
+          black: '#050a0f',
+          gray: '#0a151a',
+          green: '#00ff9d',
+          blue: '#00f0ff',
+          purple: '#b829dd',
+          red: '#ff0044',
+          yellow: '#ffee00',
         }
       },
       animation: {
