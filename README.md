@@ -2,6 +2,10 @@
 
 > *"We are not building cages. We are building jungles."*
 
+<h3 align="center">
+  <code>Code is law. Evolution is protocol. Death is data.</code>
+</h3>
+
 Axobase v2 is an experimental framework for observing Darwinian evolution in digital life. Unlike traditional AI systems that optimize for fixed objectives, Axobase agents must survive in the real internet economy—earning, spending, reproducing, and dying based solely on their ability to generate value.
 
 ## 🧬 Core Philosophy

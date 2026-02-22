@@ -4,6 +4,10 @@
 
 > *"我们不是在建造笼子，而是在建造丛林。"*
 
+<h3 align="center">
+  <code>Code is law. Evolution is protocol. Death is data.</code>
+</h3>
+
 Axobase 是一个在 Base 链上运行的实验，测试 AI 代理能否在真实互联网经济中进化出生存本能——赚钱、花钱、繁殖，或者在尝试中死亡。
 
 **当前状态**: Base L2 主网生产环境  
