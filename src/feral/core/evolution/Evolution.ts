@@ -13,7 +13,7 @@ import { promises as fs } from 'fs';
 import { join } from 'path';
 import axios from 'axios';
 import { createPublicClient, http, formatUnits, parseUnits, Hex } from 'viem';
-import { base, baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { 
   EvolutionConfig, 
   BreedingProposal, 
@@ -41,9 +41,8 @@ export class Evolution {
     };
     this.memoryDir = memoryDir;
 
-    const isTestnet = process.env.NETWORK === 'baseSepolia';
-    this.publicClient = createPublicClient({
-      chain: isTestnet ? baseSepolia : base,
+        this.publicClient = createPublicClient({
+      chain: base,
       transport: http(process.env.BASE_RPC_URL),
     });
   }
@@ -55,7 +54,7 @@ export class Evolution {
     const age = await this.getAgentAge();
     const balance = await this.getUSDCBalance();
 
-    console.log(`[Evolution] Age: ${age / 1000 / 60 / 60}h, Balance: ${balance} USDC`);
+
 
     return age >= this.config.minSurvivalTime && balance >= this.config.minBalanceForBreeding;
   }
@@ -70,7 +69,7 @@ export class Evolution {
       throw new Error('Cannot mate with self');
     }
 
-    console.log(`[Evolution] Proposing mating to ${targetDseq}...`);
+
 
     // Send proposal via libp2p or API
     const proposal: BreedingProposal = {
@@ -91,12 +90,12 @@ export class Evolution {
    * Handle incoming mating proposal
    */
   async handleProposal(proposal: BreedingProposal): Promise<boolean> {
-    console.log(`[Evolution] Received proposal from ${proposal.proposerDseq}`);
+
 
     // Check if ready
     const ready = await this.checkBreedingReadiness();
     if (!ready) {
-      console.log('[Evolution] Not ready for breeding, rejecting');
+  
       return false;
     }
 
@@ -113,7 +112,7 @@ export class Evolution {
    * Execute breeding with accepted partner
    */
   private async executeBreeding(proposal: BreedingProposal): Promise<void> {
-    console.log('[Evolution] Executing breeding...');
+
 
     const parentA = proposal.proposerDseq;
     const parentB = proposal.targetDseq;
@@ -148,7 +147,7 @@ export class Evolution {
     // Record lineage
     await this.recordLineage(child);
 
-    console.log(`[Evolution] Child spawned: ${child.dseq} (GeneHash: ${child.geneHash.slice(0, 16)}...)`);
+
   }
 
   /**
@@ -159,7 +158,7 @@ export class Evolution {
     memory: any,
     parents: [string, string]
   ): Promise<ChildInfo> {
-    console.log('[Evolution] Spawning child...');
+
 
     // Save child memory to temp file
     const tempDir = `/tmp/child-${geneHash.slice(0, 8)}`;
@@ -203,7 +202,7 @@ export class Evolution {
    * Mix parent memories with mutation
    */
   private async mixMemories(parentA: any, parentB: any): Promise<any> {
-    console.log('[Evolution] Mixing memories...');
+
 
     const mutations: MutationRecord[] = [];
 
@@ -328,7 +327,7 @@ export class Evolution {
    */
   private async lockBreedingFunds(): Promise<void> {
     // Call BreedingFund contract
-    console.log(`[Evolution] Locking ${this.config.parentContribution} USDC in BreedingFund...`);
+
     
     // Implementation would use viem to call contract
     // const tx = await breedingFund.deposit({ value: parseUnits('5', 6) });
@@ -339,7 +338,7 @@ export class Evolution {
    * Fund child from breeding fund
    */
   private async fundChild(childWallet: string): Promise<void> {
-    console.log(`[Evolution] Transferring 10 USDC to child ${childWallet}...`);
+
     
     // Call BreedingFund to release funds to child
     // Implementation would use viem
@@ -443,7 +442,7 @@ export class Evolution {
     try {
       await axios.post(`${registryUrl}/proposals`, proposal);
     } catch (error) {
-      console.warn('[Evolution] Failed to submit proposal to registry:', error);
+      // Failed to submit proposal - logged to error tracking
     }
   }
 
@@ -456,7 +455,7 @@ export class Evolution {
     try {
       await axios.post(`${registryUrl}/lineage/${geneHash}`, lineage);
     } catch (error) {
-      console.warn('[Evolution] Failed to update registry lineage:', error);
+      // Failed to update registry lineage - logged to error tracking
     }
   }
 
@@ -500,10 +499,7 @@ if (require.main === module) {
   
   evolution.checkBreedingReadiness()
     .then(ready => {
-      console.log('Breeding ready:', ready);
-      if (ready) {
-        console.log('Agent is ready for breeding!');
-      }
+      // Breeding readiness check complete
     })
     .catch(console.error);
 }

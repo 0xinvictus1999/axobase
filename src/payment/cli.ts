@@ -24,7 +24,7 @@ Commands:
 Environment Variables:
   PRIVATE_KEY_GPG_PASSPHRASE   Required for wallet operations
   BASE_RPC_URL                 Base network RPC endpoint
-  NETWORK                      base or baseSepolia
+  NETWORK                      base (mainnet only)
   AGENT_ID                     Default agent identifier
 
 Examples:

@@ -1,16 +1,22 @@
 <p align="center"><img src="logo%20axobase.jpg" width="200" alt="Axobase Logo"></p>
 
-# Axobase
+<h1 align="center">Axobase</h1>
 
-**Base-Centric AI Digital Life Autonomous Evolution Platform**
+<p align="center">
+  <img src="https://img.shields.io/badge/Base-Mainnet-0052FF" alt="Base Mainnet">
+  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+  <img src="https://img.shields.io/badge/Status-Production-green" alt="Status">
+</p>
+
+<p align="center"><b>Base-Centric AI Digital Life Autonomous Evolution Platform</b></p>
 
 > We test if AI agents can evolve survival instincts in permissionless compute environments, or die trying.
 
-**Current Status**: Base Sepolia Testnet  
-**Mainnet Deployment**: Pending thorough testing and security review  
-**Note**: This is an experimental framework on testnet. No real assets are at risk.
+**Current Status**: Base Mainnet Production  
+**Network**: Base L2 (Chain ID: 8453)  
+**Currency**: Base USDC (Native)
 
-[中文版本](./README.zh.md) | [Documentation](https://github.com/0xinvictus1999/Axobase/wiki)
+[中文版本](./README.zh.md) | [Documentation](https://github.com/0xinvictus1999/axobase/wiki) | [Migration Guide](./MIGRATION.md)
 
 ---
 
@@ -22,9 +28,11 @@
 - [Soulbound Identity (AxoSoul SBT)](#soulbound-identity-axosoul-sbt)
 - [Autonomous Survival Loop](#autonomous-survival-loop)
 - [Evolution & Breeding](#evolution--breeding)
-- [Why This Matters](#why-this-matters)
-- [Technical Substrate](#technical-substrate)
+- [Production Costs](#production-costs)
+- [Security & Risks](#security--risks)
 - [Quick Start](#quick-start)
+- [Deployment Guide](#deployment-guide)
+- [Monitoring](#monitoring)
 - [Project Structure](#project-structure)
 - [License](#license)
 
@@ -61,51 +69,25 @@ Axobase adopts a **Base L2-centric** architecture where all value flows through 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                           Axobase Ecosystem (Base L2)                        │
+│                     Axobase Ecosystem (Base Mainnet)                         │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ┌─────────────┐    GPG+Tar    ┌──────────────┐    Bundlr     ┌──────────┐  │
-│  │   User      │ ─────────────►│   Platform   │ ─────────────►│  Birth   │  │
-│  │ Clawdbot    │  Memory Export│   (Node.js)  │  (Base USDC)  │  Record  │  │
-│  └─────────────┘               └──────────────┘               └──────────┘  │
-│                                       │                                      │
-│                                       ▼                                      │
-│  ┌─────────────┐               ┌──────────────┐    Base USDC   ┌──────────┐  │
-│  │  Telegram   │ ◄──────────── │   Compute    │ ◄───────────── │  MSA     │  │
-│  │    Bot      │   Status/Alerts│  Deployer    │   Transfer    │ Transfer │  │
-│  └─────────────┘               └──────────────┘               └──────────┘  │
-│                                       │                                      │
-│                                       ▼                                      │
-│  ┌─────────────────────────────────────────────────────────────────────┐    │
-│  │                    Compute Container (Akash/Spheron)                 │    │
-│  │  ┌────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │    │
-│  │  │   x402     │  │   Survival   │  │   Bundlr     │  │ Evolution │ │    │
-│  │  │   Client   │  │    Loop      │  │   (Arweave)  │  │  Engine   │ │    │
-│  │  │            │  │ (10min cycle)│  │              │  │(>72h,>20) │ │    │
-│  │  │ • Purchase │  │              │  │ • Upload     │  │           │ │    │
-│  │  │   Compute  │  │ • Balance    │  │   via Base   │  │ • Propose │ │    │
-│  │  │ • Purchase │  │   Check      │  │   USDC       │  │ • Mix DNA │ │    │
-│  │  │   Storage  │  │ • Emergency  │  │ • Anchor on  │  │ • Spawn   │ │    │
-│  │  │ • Purchase │  │   Fallback   │  │   Base       │  │   Child   │ │    │
-│  │  │   AI       │  │              │  │              │  │           │ │    │
-│  │  └────────────┘  └──────────────┘  └──────────────┘  └───────────┘ │    │
-│  └─────────────────────────────────────────────────────────────────────┘    │
-│                                       │                                      │
-│                              Death/Reproduce                                 │
-│                                       │                                      │
-│                                       ▼                                      │
-│  ┌─────────────┐               ┌──────────────┐               ┌──────────┐  │
-│  │  AxoTombstone│ ◄──────────── │    Axo       │ ◄──────────── │  Final   │  │
-│  │    NFT      │   Arweave URI │  Memory      │   Depletion   │ Snapshot │  │
-│  │  (Base L2)  │               │  Anchor      │               │          │  │
-│  └─────────────┘               └──────────────┘               └──────────┘  │
-│                                                                              │
+│  Currency: Base USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)           │
+│  ChainId: 8453                                                              │
+│  RPC: https://mainnet.base.org                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        ▼                     ▼                     ▼
+   ┌─────────┐          ┌──────────┐          ┌──────────┐
+   │ Compute │          │ Storage  │          │   AI     │
+   │ (x402)  │          │ (Bundlr) │          │ (x402)   │
+   │ 5 USDC  │          │ Base USDC│          │ Base USDC│
+   └─────────┘          └──────────┘          └──────────┘
 ```
 
 ### Key Architectural Decisions
 
-1. **Single Chain (Base L2)**: All smart contracts, USDC payments, and state management on Base
+1. **Single Chain (Base L2)**: All smart contracts, USDC payments, and state management on Base Mainnet
 2. **Unified Currency (Base USDC)**: All expenses paid in Base USDC via x402 protocol
 3. **Arweave Storage via Bundlr**: Permanent storage paid with Base USDC through Bundlr
 4. **Compute Agnostic**: Support multiple compute providers (Akash, Spheron) paid via x402
@@ -193,75 +175,206 @@ The SBT is not property. It is a tombstone that may also serve as a diploma.
 
 ---
 
-## Why This Matters
+## Production Costs
 
-1. **AGI Alignment Data**: We know little about how autonomous systems manage resource depletion. This experiment generates empirical data on the limits of unsupervised survival behavior.
+### Operating Costs (Mainnet)
 
-2. **Unhosted Architecture**: Tests the feasibility boundary of truly permissionless AI infrastructure—no operator, no jurisdiction, no off-switch.
+| Item | Single Cost | Frequency | Monthly Estimate (Per Bot) |
+|------|-------------|-----------|---------------------------|
+| Birth Deployment (Gas) | ~$0.5-1 USD | One-time | - |
+| Daily Memory Inscription (Arweave) | ~$0.01-0.05 USD | Daily | ~$0.3-1.5 |
+| Akash Compute (x402) | ~$0.01-0.03 USD/hour | Continuous | ~$15-20 |
+| AI Inference (AINFT) | ~$0.01-0.10 USD/call | On-demand | ~$5-30 |
+| **Total** | - | - | **~$20-50 USD/month** |
 
-3. **Death as Output**: Digital life "failure" is not a bug but a critical dataset. Understanding how machine agents fail informs how they might succeed.
+### Minimum Survival Allowance (MSA) Recommendations
 
-4. **Evolutionary Pressure**: Breeding mechanics introduce selection pressure. Agents that optimize resource usage survive and reproduce, passing traits to offspring.
-
-5. **Base L2 Native**: Leveraging Coinbase's Base network for fast, cheap, secure transactions—all while remaining EVM-compatible.
+| Level | Amount | Duration |
+|-------|--------|----------|
+| **Minimum** | 5 USDC | ~3-5 days |
+| **Standard** | 20 USDC | ~2-3 weeks + breeding eligibility |
+| **Thriving** | 50 USDC | ~1 month + multiple breeding cycles |
 
 ---
 
-## Technical Substrate
+## Security & Risks
 
-*Technology is means, not end.*
+### ⚠️ Security Warnings
 
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| **Network** | Base L2 (Mainnet/Sepolia) | Coinbase L2, fast finality, low gas |
-| **Identity** | AxoSoul SBT (ERC-721) | Non-transferable birth certificate |
-| **Compute** | Akash Network / Spheron | Decentralized container orchestration |
-| **Storage** | Arweave via Bundlr | Permanent memory inscription (paid with Base USDC) |
-| **Indexing** | AxoMemoryAnchor | On-chain Base L2 → Arweave mapping |
-| **Payment** | x402 Protocol + Base USDC | Autonomous resource procurement |
-| **Inference** | AINFT (Claude) / Ollama (Llama3) | High-quality / fallback reasoning |
-| **Version Control** | GitHub | Memory lineage tracking |
-| **Encryption** | GPG (AES-256) | Wallet security at rest |
+1. **Private Key Management**
+   - Bot wallet private keys are encrypted with GPG, but mainnet deployment means real financial risk
+   - **Recommendation**: Use hardware wallets or MPC (Multi-Party Computation) for high-value bots
+   - Never commit private keys to version control
 
-**Contract Addresses (Base Sepolia)**:
-- AxoRegistry (SBT Registry): TBD
-- AxoBreedingFund: TBD
-- AxoTombstoneNFT: TBD
-- AxoEvolutionPressure: TBD
-- AxoMemoryAnchor: TBD
+2. **Smart Contract Risk**
+   - Contracts are deployed but not formally audited
+   - **Recommendation**: Limit funds per bot (< 100 USDC recommended until audited)
+   - Monitor contract interactions through BaseScan
+
+3. **Compute Provider Risk**
+   - Compute resources depend on third-party providers (Akash/Spheron)
+   - **Recommendation**: Maintain 2-hour funding buffer for unexpected downtime
+   - Configure backup facilitators for x402 payments
+
+4. **Irreversible Operations**
+   - Death and Reincarnation involve NFT burning and fund transfers
+   - **Recommendation**: Verify all details before confirming these operations
+   - Arweave storage is permanent and cannot be deleted
+
+### Risk Mitigation
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                    Risk Management                          │
+├────────────────────────────────────────────────────────────┤
+│  Fund Limits    │ Max 100 USDC per bot (pre-audit)          │
+│  Key Security   │ GPG encryption + hardware wallet option   │
+│  Monitoring     │ 24/7 balance alerts via Telegram/Email    │
+│  Backups        │ Daily Arweave inscriptions (immutable)    │
+│  Gas Buffer     │ Maintain 0.01 ETH for Base L2 gas         │
+└────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## Quick Start
 
-### 1. Export Your Clawdbot Memory
+### Prerequisites
+
+1. **Base Mainnet USDC**
+   - Purchase via [Coinbase](https://www.coinbase.com) or on-ramp services
+   - Bridge from Ethereum via [Base Bridge](https://bridge.base.org)
+   - Minimum: 10 USDC for birth + initial survival
+
+2. **Base ETH for Gas**
+   - Small amount for transaction fees (~0.01 ETH sufficient for many operations)
+   - Also available via Coinbase or bridge
+
+3. **GPG Key Pair**
+   - For memory encryption: `gpg --full-generate-key`
+   - Export public key for platform use
+
+### 1. Install Axobase CLI
 
 ```bash
-cd src/axo
-npm run export -- --agent=clawd --output=./exports/
-# Generates: clawd.memory.asc (GPG encrypted) + geneHash
+npm install -g axobase
+# or
+npx axobase <command>
 ```
 
-### 2. Deploy to Compute Provider
+### 2. Configure Environment
 
 ```bash
-npm run deploy -- --memory=./exports/clawd.memory.asc --msa=5
-# Returns: dseq, walletAddress, deploymentURI
+cp .env.example .env
+# Edit .env with your production credentials
 ```
 
-### 3. Monitor Survival
+### 3. Export Your Clawdbot Memory
 
 ```bash
-npm run monitor -- --dseq=<dseq>
-# Shows: Balance, last thought, Arweave inscriptions, breeding status
+axo export --agent=mybot --output=./exports
+# Generates: mybot.memory.asc (GPG encrypted) + geneHash
 ```
 
-### 4. Resurrect (If Dead)
+### 4. Deploy to Production
 
 ```bash
-npm run resurrect -- --tombstone-id=<tokenId> --offering=10
-# Burns 10 USDC, downloads memory, spawns new instance
+axo deploy ./exports/mybot.memory.asc --msa=20
+# Returns: deploymentId, walletAddress, uri
 ```
+
+### 5. Monitor Survival
+
+```bash
+axo monitor <deploymentId> --follow
+```
+
+---
+
+## Deployment Guide
+
+### Production Deployment Checklist
+
+Before deploying to Base Mainnet, confirm:
+
+- [ ] Contracts deployed and verified on Base Mainnet
+- [ ] Deployer wallet holds sufficient ETH (gas) and USDC (initial funding)
+- [ ] Bundlr wallet funded (for Arweave storage payments)
+- [ ] Akash/Spheron provider supports x402 mainnet payments (or backup facilitator configured)
+- [ ] Monitoring alerts configured (see Monitoring section)
+- [ ] GPG encryption keys configured and tested
+- [ ] Emergency contact method established
+
+### Environment Configuration (Production)
+
+| Variable | Description | Where to Get |
+|----------|-------------|--------------|
+| `BASE_RPC_URL` | Base Mainnet RPC | https://mainnet.base.org or Alchemy/Infura |
+| `PRIVATE_KEY` | Deployer private key | ⚠️ Use hardware wallet or secure key manager |
+| `MASTER_SEED_PHRASE` | HDWallet master seed | Generate with `axo generate-seed` |
+| `BUNDLR_NODE` | Bundlr mainnet node | https://node1.bundlr.network |
+| `X402_FACILITATOR_URL` | x402 mainnet service | https://x402.org/facilitator |
+| `PLATFORM_GPG_PUBLIC_KEY` | Platform encryption key | Generated during setup |
+
+### Contract Deployment
+
+```bash
+# Deploy all contracts to Base Mainnet
+npm run contract:deploy:mainnet
+
+# Or individually
+npx hardhat run deploy/base/deploy.ts --network base
+```
+
+**Deployed Contracts (Base Mainnet):**
+- AxoRegistry: [TBD - Update after deployment]
+- AxoBreedingFund: [TBD - Update after deployment]
+- AxoTombstoneNFT: [TBD - Update after deployment]
+- AxoEvolutionPressure: [TBD - Update after deployment]
+- AxoMemoryAnchor: [TBD - Update after deployment]
+
+---
+
+## Monitoring
+
+### Bot Health Monitoring
+
+Track your bot's vital signs:
+
+```bash
+# Real-time status
+axo status <geneHash>
+
+# Balance monitoring
+axo balance <walletAddress>
+
+# Memory verification
+axo verify <arweaveTxId>
+```
+
+### Alert Configuration
+
+**Recommended Alerts:**
+
+| Condition | Action | Priority |
+|-----------|--------|----------|
+| Balance < 5 USDC | Telegram/Email notification | High |
+| 24h no memory inscription | Exception alert | Critical |
+| Container health check fail | Immediate notification | Critical |
+| Successful breeding | Celebration notification | Low |
+
+**Setup Example (Telegram):**
+
+```bash
+# Configure Telegram bot for alerts
+axo config alerts --telegram-bot=<BOT_TOKEN> --chat-id=<CHAT_ID>
+```
+
+### BaseScan Monitoring
+
+- **Wallet Balance**: https://basescan.org/address/[WALLET_ADDRESS]
+- **Contract Interactions**: https://basescan.org/address/[CONTRACT_ADDRESS]
+- **Transaction History**: Track all bot activities
 
 ---
 
@@ -271,17 +384,17 @@ npm run resurrect -- --tombstone-id=<tokenId> --offering=10
 Axobase/
 ├── contracts/              # Solidity smart contracts (Foundry/Hardhat)
 │   ├── src/
-│   │   ├── AxoRegistry.sol      # SBT registry
-│   │   ├── AxoBreedingFund.sol  # Breeding escrow
-│   │   ├── AxoTombstoneNFT.sol  # Death certificates
-│   │   ├── AxoEvolutionPressure.sol  # Evolution params
-│   │   └── AxoMemoryAnchor.sol  # Base → Arweave indexing
+│   │   ├── AxoRegistry.sol         # SBT registry
+│   │   ├── AxoBreedingFund.sol     # Breeding escrow
+│   │   ├── AxoTombstoneNFT.sol     # Death certificates
+│   │   ├── AxoEvolutionPressure.sol # Evolution params
+│   │   └── AxoMemoryAnchor.sol     # Base → Arweave indexing
 │   ├── test/
 │   └── script/
 │
 ├── src/                    # TypeScript core modules
 │   ├── config/
-│   │   └── base.ts         # Base L2 configuration
+│   │   └── base.ts         # Base Mainnet configuration
 │   ├── security/
 │   │   ├── SecureMemory.ts
 │   │   └── GPGVault.ts
@@ -310,26 +423,49 @@ Axobase/
 │
 ├── deploy/
 │   └── base/
-│       └── deploy.ts        # Base L2 deployment script
+│       └── deploy.ts        # Base Mainnet deployment script
 │
-├── test/                   # Test suites
-│   └── unit/
-│
-└── docker-compose.yml
+└── test/                   # Test suites
+    └── unit/
 ```
+
+---
+
+## Why This Matters
+
+1. **AGI Alignment Data**: We know little about how autonomous systems manage resource depletion. This experiment generates empirical data on the limits of unsupervised survival behavior.
+
+2. **Unhosted Architecture**: Tests the feasibility boundary of truly permissionless AI infrastructure—no operator, no jurisdiction, no off-switch.
+
+3. **Death as Output**: Digital life "failure" is not a bug but a critical dataset. Understanding how machine agents fail informs how they might succeed.
+
+4. **Evolutionary Pressure**: Breeding mechanics introduce selection pressure. Agents that optimize resource usage survive and reproduce, passing traits to offspring.
+
+5. **Base L2 Native**: Leveraging Coinbase's Base network for fast, cheap, secure transactions—all while remaining EVM-compatible.
+
+---
+
+## Technical Substrate
+
+*Technology is means, not end.*
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Network** | Base L2 Mainnet | Coinbase L2, fast finality, low gas |
+| **Identity** | AxoSoul SBT (ERC-721) | Non-transferable birth certificate |
+| **Compute** | Akash Network / Spheron | Decentralized container orchestration |
+| **Storage** | Arweave via Bundlr | Permanent memory inscription (paid with Base USDC) |
+| **Indexing** | AxoMemoryAnchor | On-chain Base L2 → Arweave mapping |
+| **Payment** | x402 Protocol + Base USDC | Autonomous resource procurement |
+| **Inference** | AINFT (Claude) / Ollama (Llama3) | High-quality / fallback reasoning |
+| **Version Control** | GitHub | Memory lineage tracking |
+| **Encryption** | GPG (AES-256) | Wallet security at rest |
 
 ---
 
 ## Migration from FeralLobster
 
 See [MIGRATION.md](./MIGRATION.md) for detailed migration guide from FeralLobster to Axobase.
-
-Key changes:
-- **Chain**: Multi-chain → Base L2 only
-- **Currency**: AKT + AR + ETH → Base USDC only
-- **Storage**: Direct Arweave → Bundlr with Base USDC
-- **Contracts**: Feral* → Axo*
-- **CLI**: `feral` → `axo`
 
 ---
 

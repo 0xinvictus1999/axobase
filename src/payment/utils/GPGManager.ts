@@ -53,7 +53,7 @@ export class GPGManager {
       // Check if wallet file exists
       await fs.access(walletPath);
     } catch {
-      console.error(`[GPGManager] Wallet file not found: ${walletPath}`);
+      // Wallet file not found - will be created
       return null;
     }
 
@@ -76,10 +76,10 @@ export class GPGManager {
       const tag = `wallet_${this.agentId}`;
       secureMemory.store(tag, Buffer.from(trimmed));
 
-      console.log('[GPGManager] Wallet decrypted and stored in secure memory');
+  
       return tag;
     } catch (error) {
-      console.error('[GPGManager] Decryption failed:', error);
+      // Decryption failed - error handled in throw
       throw new Error('Failed to decrypt wallet. Check passphrase and file integrity.');
     }
   }
@@ -106,10 +106,10 @@ export class GPGManager {
       // Securely delete temp file
       await this.secureDelete(tempFile);
 
-      console.log(`[GPGManager] Wallet encrypted and saved to ${targetPath}`);
+  
       return targetPath;
     } catch (error) {
-      console.error('[GPGManager] Encryption failed:', error);
+      // Encryption failed - error handled in throw
       throw new Error('Failed to encrypt wallet');
     }
   }
@@ -136,10 +136,10 @@ export class GPGManager {
       // Securely delete temp file
       await this.secureDelete(tempFile);
 
-      console.log(`[GPGManager] Wallet exported to ${backupPath} (encrypted for ${gpgKeyId})`);
+  
       return backupPath;
     } catch (error) {
-      console.error('[GPGManager] Export failed:', error);
+      // Export failed - error handled in throw
       throw new Error('Failed to export wallet');
     }
   }
@@ -164,10 +164,10 @@ export class GPGManager {
       // Clear key from memory
       // Note: This is best-effort in JS
 
-      console.log(`[GPGManager] New wallet generated: ${address}`);
+  
       return { address, encryptedPath };
     } catch (error) {
-      console.error('[GPGManager] Wallet generation failed:', error);
+      // Wallet generation failed - error handled in throw
       throw new Error('Failed to generate new wallet');
     }
   }

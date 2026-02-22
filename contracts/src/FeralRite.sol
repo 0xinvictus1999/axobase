@@ -35,8 +35,8 @@ contract AxoRite is Ownable {
     /// @dev botWallet => memoryHash 反向映射
     mapping(address => bytes32) public walletToSoul;
     
-    /// @dev Base Sepolia USDC 合约地址
-    address public constant usdcAddress = 0x036CbD53842c5426634e7929541eC2318f3dCF7e;
+    /// @dev Base Mainnet USDC 合约地址
+    address public constant usdcAddress = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
     
     /// @dev 平台管理地址
     address public platformAddress;

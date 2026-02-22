@@ -64,7 +64,7 @@ export class MemoryImporter {
       throw new Error(`Encrypted file not found: ${encryptedPath}`);
     }
 
-    console.log(`[Import] Importing from: ${encryptedPath}`);
+
 
     // Read encrypted data
     const encryptedData = await fs.readFile(encryptedPath, 'utf8');
@@ -83,7 +83,7 @@ export class MemoryImporter {
       const privateKey = await fs.readFile(privateKeyPath, 'utf8');
       archiveData = await this.gpgVault.decrypt(encryptedData, privateKey, passphrase);
 
-      console.log('[Import] Decrypted GPG-encrypted archive');
+
     } else {
       // Assume it's already a tar.gz (for testing)
       archiveData = Buffer.from(encryptedData, 'binary');
@@ -103,14 +103,14 @@ export class MemoryImporter {
         cwd: outputDir,
       });
 
-      console.log(`[Import] Extracted to: ${outputDir}`);
+
 
       // Verify extracted files
       const extractedFiles = await this.verifyExtractedFiles(outputDir);
 
       // Compute geneHash from extracted files
       const computedGeneHash = await this.computeGeneHash(outputDir, extractedFiles);
-      console.log(`[Import] Computed geneHash: ${computedGeneHash}`);
+  
 
       // Load memory data
       const memory = await this.loadMemoryData(outputDir, computedGeneHash);
@@ -156,7 +156,7 @@ export class MemoryImporter {
         await fs.access(filePath);
         foundFiles.push(filename);
       } catch {
-        console.warn(`[Import] Expected file not found: ${filename}`);
+        // Expected file not found - log to error tracking in production
       }
     }
 

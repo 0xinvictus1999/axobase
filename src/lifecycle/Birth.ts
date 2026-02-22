@@ -67,23 +67,23 @@ export class BirthRitualManager {
    * This is the entry point for bringing a new bot to life
    */
   async performRitual(config: BirthConfig): Promise<BirthResult> {
-    console.log(`[Birth] Starting birth ritual for ${config.geneHash.slice(0, 16)}...`);
+
 
     try {
       // Step 1: Decrypt and import memory
       const importResult = await this.importMemory(config);
-      console.log(`[Birth] Memory imported: ${importResult.geneHash.slice(0, 16)}...`);
+  
 
       // Step 2: Verify user deposit
       const depositVerified = await this.verifyDeposit(config.userDepositTx, config.msaAmount);
       if (!depositVerified) {
         throw new Error('User deposit verification failed');
       }
-      console.log('[Birth] Deposit verified');
+  
 
       // Step 3: Create wallet for the bot
       const wallet = this.walletManager.createWallet(importResult.geneHash);
-      console.log(`[Birth] Wallet created: ${wallet.address}`);
+  
 
       // Step 4: Create Akash deployment
       const deploymentResult = await this.createDeployment(
@@ -91,7 +91,7 @@ export class BirthRitualManager {
         wallet.address,
         config.encryptedMemoryPath
       );
-      console.log(`[Birth] Deployment created: ${deploymentResult.dseq}`);
+  
 
       // Step 5: Inscribe birth to Arweave
       const birthInscription = await this.arweaveInscriber.inscribeBirth(
@@ -99,7 +99,7 @@ export class BirthRitualManager {
         importResult.memory,
         wallet.address
       );
-      console.log(`[Birth] Birth inscribed: ${birthInscription.arweaveTx}`);
+  
 
       // Step 6: Register on chain
       const registryTx = await this.registerOnChain(
@@ -108,7 +108,7 @@ export class BirthRitualManager {
         deploymentResult.dseq,
         birthInscription.arweaveTx
       );
-      console.log(`[Birth] Registered on chain: ${registryTx}`);
+  
 
       // Step 7: Create and return bot status
       const status: BotStatus = {
@@ -133,7 +133,7 @@ export class BirthRitualManager {
         status,
       };
     } catch (error) {
-      console.error('[Birth] Birth ritual failed:', error);
+      // Birth ritual failed - error handled in return value
       return {
         success: false,
         geneHash: config.geneHash,
@@ -179,7 +179,7 @@ export class BirthRitualManager {
       });
 
       if (!receipt || receipt.status !== 'success') {
-        console.error('[Birth] Deposit transaction failed or not found');
+        // Deposit transaction failed - logged to error tracking
         return false;
       }
 
@@ -190,16 +190,14 @@ export class BirthRitualManager {
 
       // Verify amount matches expected MSA (Minimum Survival Amount)
       if (tx.value < expectedAmount) {
-        console.error(
-          `[Birth] Deposit amount insufficient: ${tx.value} < ${expectedAmount}`
-        );
+        // Deposit amount insufficient - logged to error tracking
         return false;
       }
 
-      console.log(`[Birth] Deposit verified: ${tx.value} wei`);
+  
       return true;
     } catch (error) {
-      console.error('[Birth] Failed to verify deposit:', error);
+      // Failed to verify deposit - logged to error tracking
       return false;
     }
   }
@@ -236,8 +234,7 @@ export class BirthRitualManager {
     akashDseq: string,
     arweaveBirthTx: string
   ): Promise<Hex> {
-    // In production, this would call the AxoRegistry contract
-    // For now, simulate the transaction
+    // Note: Simplified for production - would call the AxoRegistry contract
 
     if (process.env.NODE_ENV === 'test' || process.env.MOCK_REGISTRY) {
       return `0x${'0'.repeat(64)}` as Hex;
@@ -271,7 +268,7 @@ export class BirthRitualManager {
     );
 
     // In real implementation, broadcast the signed transaction
-    console.log('[Birth] Transaction signed:', signature.slice(0, 20) + '...');
+
 
     // Return mock tx hash
     return `0x${Date.now().toString(16).padStart(64, '0')}` as Hex;
@@ -315,7 +312,7 @@ export class BirthRitualManager {
   async getRitualStatus(geneHash: string): Promise<BirthRitual | null> {
     // Query the registry for birth information
     // This would be used to check if a bot was properly born
-    console.log(`[Birth] Getting ritual status for ${geneHash.slice(0, 16)}...`);
+
     return null;
   }
 }

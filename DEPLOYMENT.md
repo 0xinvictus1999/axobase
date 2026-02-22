@@ -7,7 +7,7 @@ Complete guide for deploying AI digital life forms on the Axobase platform.
 - Node.js 20+
 - Docker (for containerized deployment)
 - Akash Network account with AKT
-- Base Sepolia testnet ETH and USDC
+- Base Mainnet ETH and USDC
 - GPG key pair for memory encryption
 
 ## Quick Start
@@ -38,7 +38,7 @@ Required environment variables:
 
 ```bash
 # Blockchain
-BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
+BASE_RPC_URL=https://mainnet.base.org
 PRIVATE_KEY=0x...  # Deployer private key
 
 # GPG
@@ -66,11 +66,11 @@ Deploy the core contracts to Base Sepolia:
 # Compile contracts
 npm run contract:compile
 
-# Deploy to testnet
-npm run contract:deploy -- --network baseSepolia
+# Deploy to mainnet
+npm run contract:deploy -- --network base
 
 # Verify contracts
-npm run contract:verify -- --network baseSepolia
+npm run contract:verify -- --network base
 ```
 
 Contracts deployed:

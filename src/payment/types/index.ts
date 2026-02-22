@@ -60,7 +60,7 @@ export interface NetworkConfig {
 export interface X402Config {
   networks: {
     base: NetworkConfig;
-    baseSepolia?: NetworkConfig;
+  
   };
   providers: ProviderConfig[];
   thresholds: {
@@ -140,7 +140,7 @@ export interface FacilitatorResponse {
 
 // X402 Client Options
 export interface X402ClientOptions {
-  network: 'base' | 'baseSepolia';
+  network: 'base';
   maxRetries?: number;
   retryDelayMs?: number;
   pollIntervalMs?: number;

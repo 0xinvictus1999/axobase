@@ -71,20 +71,17 @@ async function cmdDeploy(args: string[]): Promise<void> {
 
   const deployment = await deployer.createDeployment(geneHash, encryptedMemory, msa);
   
-  console.log('\n=== Deployment Complete ===');
-  console.log(`DSEQ: ${deployment.dseq}`);
-  console.log(`Wallet: ${deployment.walletAddress}`);
-  console.log(`URI: ${deployment.deploymentUri}`);
+
 }
 
 async function cmdMonitor(args: string[]): Promise<void> {
   const dseqArg = args.find(a => a.startsWith('--dseq='));
   const followArg = args.find(a => a === '--follow');
 
-  console.log('Monitoring survival status...');
+
 
   const config: X402Config = {
-    network: (process.env.NETWORK as 'base' | 'baseSepolia') || 'baseSepolia',
+    network: 'base',
     usdcContract: process.env.USDC_CONTRACT || '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
     facilitatorUrl: process.env.X402_FACILITATOR || 'https://x402.org/facilitator',
     providers: [],
@@ -100,20 +97,16 @@ async function cmdMonitor(args: string[]): Promise<void> {
 
   if (followArg) {
     survival.startSurvivalLoop();
-    console.log('Survival loop started. Press Ctrl+C to stop.');
+
   } else {
     // Single check
     const state = survival.getState();
-    console.log('\n=== Survival Status ===');
-    console.log(`Mode: ${state.mode}`);
-    console.log(`USDC Balance: ${state.usdcBalance}`);
-    console.log(`ETH Balance: ${state.ethBalance}`);
-    console.log(`Last Inference: ${state.lastInference ? new Date(state.lastInference.timestamp).toISOString() : 'Never'}`);
+
   }
 }
 
 async function cmdInscribe(args: string[]): Promise<void> {
-  console.log('Performing daily inscription...');
+
 
   const config: ArweaveConfig = {
     bundlrNode: 'https://node1.bundlr.network',
@@ -126,9 +119,7 @@ async function cmdInscribe(args: string[]): Promise<void> {
   
   const inscription = await inscriber.dailyInscribe();
   
-  console.log('\n=== Inscription Complete ===');
-  console.log(`Day: ${inscription.dayNumber}`);
-  console.log(`Arweave TX: ar://${inscription.arweaveTx}`);
+
 }
 
 async function cmdPropose(args: string[]): Promise<void> {
@@ -143,15 +134,14 @@ async function cmdPropose(args: string[]): Promise<void> {
   const ready = await evolution.checkBreedingReadiness();
 
   if (!ready) {
-    console.log('Not ready for breeding yet. Requires: 72h survival + 20 USDC');
+
     return;
   }
 
   const targetDseq = targetArg.split('=')[1];
   await evolution.proposeMate(targetDseq);
   
-  console.log(`\n=== Proposal Sent ===`);
-  console.log(`Target: ${targetDseq}`);
+
 }
 
 async function cmdLegacy(args: string[]): Promise<void> {
@@ -162,17 +152,10 @@ async function cmdLegacy(args: string[]): Promise<void> {
 
   if (command === 'monitor') {
     legacy.startDeathMonitoring();
-    console.log('Death monitoring started. Press Ctrl+C to stop.');
+
   } else if (command === 'check') {
     const record = await legacy.getDeathRecord();
-    if (record) {
-      console.log('\n=== Death Record ===');
-      console.log(`Type: ${record.deathType}`);
-      console.log(`Time: ${new Date(record.timestamp).toISOString()}`);
-      console.log(`Tombstone: ${record.tombstoneTokenId}`);
-    } else {
-      console.log('Agent is still alive.');
-    }
+
   } else {
     console.log('Usage: axo legacy <monitor|check>');
   }
@@ -193,19 +176,15 @@ async function cmdResurrect(args: string[]): Promise<void> {
   const tombstoneId = tombstoneArg.split('=')[1];
   const offering = parseInt(offeringArg?.split('=')[1] || '10');
 
-  console.log(`Initiating reincarnation for ${tombstoneId}...`);
-  console.log(`Burn offering: ${offering} USDC`);
+
 
   const result = await legacy.reincarnate(tombstoneId);
   
-  console.log('\n=== Reincarnation Complete ===');
-  console.log(`New GeneHash: ${result.geneHash}`);
-  console.log(`New DSEQ: ${result.dseq}`);
+
 }
 
 async function cmdHelp(): Promise<void> {
-  console.log(`
-Axobase - Digital Life Autonomy Framework
+
 
 Commands:
   export      Export Clawdbot memory
@@ -231,7 +210,7 @@ Commands:
   help        Show this help message
 
 Environment Variables:
-  NETWORK              base or baseSepolia
+  NETWORK              base (mainnet only)
   BASE_RPC_URL         RPC endpoint
   USDC_CONTRACT        USDC contract address
   AKASH_MNEMONIC       Akash wallet mnemonic
@@ -259,7 +238,7 @@ async function main(): Promise<void> {
   try {
     await handler(args);
   } catch (error) {
-    console.error('Error:', error);
+
     process.exit(1);
   }
 }

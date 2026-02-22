@@ -48,14 +48,14 @@ export class ArweaveInscriber {
       }
     );
 
-    console.log('[ArweaveInscriber] Bundlr client initialized');
+
   }
 
   /**
    * Daily inscription (run at 00:00 UTC)
    */
   async dailyInscribe(): Promise<DailyInscription> {
-    console.log('[ArweaveInscriber] Starting daily inscription...');
+
 
     const now = new Date();
     const dayNumber = await this.getDayNumber();
@@ -85,7 +85,7 @@ export class ArweaveInscriber {
     // Git commit
     await this.gitCommit(inscription);
 
-    console.log(`[ArweaveInscriber] Day ${dayNumber} inscribed at ar://${txId}`);
+
 
     return inscription;
   }
@@ -100,7 +100,7 @@ export class ArweaveInscriber {
 
     const msUntilMidnight = tomorrow.getTime() - now.getTime();
 
-    console.log(`[ArweaveInscriber] Scheduling first inscription in ${msUntilMidnight / 1000 / 60} minutes`);
+
 
     // First run at next midnight
     setTimeout(() => {
@@ -246,7 +246,7 @@ export class ArweaveInscriber {
     const price = await this.bundlrClient.getPrice(data.length);
 
     if (balance.lt(price)) {
-      console.log('[ArweaveInscriber] Funding Bundlr...');
+
       await this.bundlrClient.fund(price.mul(2)); // Fund 2x for future
     }
 
@@ -301,9 +301,9 @@ export class ArweaveInscriber {
         // No remote or push failed - non-fatal
       }
 
-      console.log(`[ArweaveInscriber] Git commit: ${message}`);
+  
     } catch (error) {
-      console.warn('[ArweaveInscriber] Git commit failed (non-fatal):', error);
+      // Git commit failed - non-fatal, continue operation
     }
   }
 

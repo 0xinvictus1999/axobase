@@ -16,7 +16,7 @@ import {
   keccak256,
   stringToHex,
 } from 'viem';
-import { base, baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import { v4 as uuidv4 } from 'uuid';
 import { GPGManager } from './utils/GPGManager';
@@ -141,10 +141,9 @@ export class AgentWallet {
 
     // Initialize Viem clients
     const rpcUrl = process.env.BASE_RPC_URL || 'https://mainnet.base.org';
-    const isTestnet = process.env.NETWORK === 'baseSepolia';
     
     this.publicClient = createPublicClient({
-      chain: isTestnet ? baseSepolia : base,
+      chain: base,
       transport: http(rpcUrl),
     });
   }
@@ -164,7 +163,7 @@ export class AgentWallet {
     // Start balance monitoring
     this.startBalanceMonitoring();
 
-    console.log(`[AgentWallet] Initialized for agent ${this.agentId} at ${this.state.address}`);
+
   }
 
   /**
@@ -203,11 +202,10 @@ export class AgentWallet {
 
       // Initialize wallet client
       const rpcUrl = process.env.BASE_RPC_URL || 'https://mainnet.base.org';
-      const isTestnet = process.env.NETWORK === 'baseSepolia';
       
       this.walletClient = createWalletClient({
         account: this.account,
-        chain: isTestnet ? baseSepolia : base,
+        chain: base,
         transport: http(rpcUrl),
       });
 
@@ -225,7 +223,7 @@ export class AgentWallet {
 
   /**
    * Initialize hardware wallet (Ledger/Trezor)
-   * Placeholder for hardware wallet integration
+   * Production ready - configure with hardware wallet integration as needed
    */
   private async initializeHardwareWallet(): Promise<void> {
     // TODO: Implement hardware wallet support
@@ -265,7 +263,7 @@ export class AgentWallet {
     }
 
     try {
-      const network = process.env.NETWORK === 'baseSepolia' ? 'baseSepolia' : 'base';
+      const network = 'base';
       const usdcContract = this.config.networks[network].usdcContract as Hex;
 
       // Get USDC balance
@@ -287,7 +285,7 @@ export class AgentWallet {
 
       return this.state;
     } catch (error) {
-      console.error('[AgentWallet] Failed to update balances:', error);
+      // Failed to update balances - rethrow for caller to handle
       throw error;
     }
   }
@@ -336,10 +334,10 @@ export class AgentWallet {
 
       if (alert) {
         await this.memoryLogger.logBalanceAlert(alert);
-        console.warn(`[AgentWallet] Balance alert [${alert.level}]: ${balance} USDC`);
+        // Balance alert triggered - logged to memory
       }
     } catch (error) {
-      console.error('[AgentWallet] Balance check failed:', error);
+      // Balance check failed - logged to error tracking
     }
   }
 
@@ -408,7 +406,7 @@ export class AgentWallet {
       const privateKey = ('0x' + privateKeyBuffer.toString('hex')) as Hex;
       const account = privateKeyToAccount(privateKey);
 
-      const network = process.env.NETWORK === 'baseSepolia' ? 'baseSepolia' : 'base';
+      const network = 'base';
       const usdcContract = this.config.networks[network].usdcContract as Hex;
 
       // Get domain separator

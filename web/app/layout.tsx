@@ -13,7 +13,7 @@ const mono = Share_Tech_Mono({
 
 export const metadata: Metadata = {
   title: 'Axobase - Decentralized Autonomy Experiment',
-  description: 'Digital life evolution in permissionless compute environments - Base Sepolia Testnet',
+  description: 'Digital life evolution in permissionless compute environments - Base Mainnet',
 }
 
 export default function RootLayout({

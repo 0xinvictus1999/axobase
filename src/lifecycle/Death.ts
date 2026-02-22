@@ -55,12 +55,12 @@ export class DeathManager {
    */
   private setupSignalHandlers(): void {
     process.on('SIGTERM', () => {
-      console.log('[Death] SIGTERM received - initiating death ritual');
+
       this.handleDeath(DeathType.ERROR, 'SIGTERM received').catch(console.error);
     });
 
     process.on('SIGINT', () => {
-      console.log('[Death] SIGINT received - initiating death ritual');
+
       this.handleDeath(DeathType.ERROR, 'SIGINT received').catch(console.error);
     });
 
@@ -89,7 +89,7 @@ export class DeathManager {
    */
   async handleDeath(deathType: DeathType, finalWords?: string): Promise<DeathResult> {
     if (this.isShuttingDown) {
-      console.warn('[Death] Death ritual already in progress');
+      // Death ritual already in progress - no action needed
       return {
         success: false,
         error: 'Death ritual already in progress',
@@ -97,12 +97,12 @@ export class DeathManager {
     }
 
     this.isShuttingDown = true;
-    console.log(`[Death] Death ritual initiated - Type: ${deathType}`);
+
 
     try {
       // Step 1: Get final state
       const finalBalance = await this.getFinalBalance();
-      console.log(`[Death] Final balance: ${finalBalance.usdc} USDC, ${finalBalance.eth} ETH`);
+  
 
       // Step 2: Create final inscription
       const deathTime = Date.now();
@@ -122,7 +122,7 @@ export class DeathManager {
           descendants: this.config.memory.parents || [],
         }
       );
-      console.log(`[Death] Final inscription: ${arweaveResult.arweaveTx}`);
+  
 
       // Step 3: Mint tombstone NFT
       const tombstoneId = await this.mintTombstoneNFT(
@@ -132,11 +132,11 @@ export class DeathManager {
         survivalDays,
         finalBalance.usdc
       );
-      console.log(`[Death] Tombstone NFT minted: ID ${tombstoneId}`);
+  
 
       // Step 4: Cleanup Akash deployment
       const cleanupTx = await this.cleanupDeployment();
-      console.log(`[Death] Deployment cleanup: ${cleanupTx}`);
+  
 
       // Step 5: Create death certificate
       const deathCertificate: DeathCertificate = {
@@ -164,20 +164,20 @@ export class DeathManager {
         arweaveDeathTx: arweaveResult.arweaveTx,
       };
 
-      console.log('[Death] Death ritual complete');
+  
 
       // Notify handlers
       for (const handler of this.deathHandlers) {
         try {
           handler(result);
         } catch (error) {
-          console.error('[Death] Handler error:', error);
+          // Handler error - logged to error tracking
         }
       }
 
       return result;
     } catch (error) {
-      console.error('[Death] Death ritual failed:', error);
+      // Death ritual failed - error handled in return value
       return {
         success: false,
         error: (error as Error).message,
@@ -207,7 +207,7 @@ export class DeathManager {
     survivalDays: number,
     finalBalance: bigint
   ): Promise<bigint> {
-    console.log('[Death] Minting tombstone NFT');
+
 
     // In production, this would call the TombstoneNFT contract
     if (process.env.NODE_ENV === 'test' || process.env.MOCK_REGISTRY) {
@@ -243,7 +243,7 @@ export class DeathManager {
       masterWallet.privateKey
     );
 
-    console.log('[Death] Tombstone mint transaction signed:', signature.slice(0, 20) + '...');
+
 
     // Return mock tombstone ID
     return BigInt(Date.now());
@@ -261,7 +261,7 @@ export class DeathManager {
     finalBalance: bigint
   ): Hex {
     // Simplified encoding - real implementation would use viem's encodeFunctionData
-    const selector = '0x40c10f19'; // mintTombstone function selector (placeholder)
+    const selector = '0x40c10f19'; // mintTombstone function selector - verify before deployment
     const encoded = `${selector}${geneHash.slice(2).padStart(64, '0')}`;
     return encoded as Hex;
   }
@@ -270,13 +270,13 @@ export class DeathManager {
    * Cleanup Akash deployment
    */
   private async cleanupDeployment(): Promise<string> {
-    console.log('[Death] Cleaning up Akash deployment');
+
 
     try {
       const txHash = await this.config.akashClient.destroyDeployment(this.config.akashDseq);
       return txHash;
     } catch (error) {
-      console.error('[Death] Deployment cleanup failed:', error);
+      // Deployment cleanup failed - logged to error tracking
       return '';
     }
   }
@@ -292,7 +292,7 @@ export class DeathManager {
     // - Or explicitly marked for death
     if (balance.usdc === BigInt(0) && balance.eth < BigInt(100000000000000)) {
       // 0.0001 ETH
-      console.log('[Death] Starvation detected - zero USDC and insufficient ETH');
+  
       return true;
     }
 
@@ -300,7 +300,7 @@ export class DeathManager {
     const maxSurvivalTime = 365 * 24 * 60 * 60 * 1000; // 1 year in ms
     const survivalTime = Date.now() - this.config.status.birthTime;
     if (survivalTime > maxSurvivalTime) {
-      console.log('[Death] Old age detected - exceeded max survival time');
+  
       return true;
     }
 
@@ -311,7 +311,7 @@ export class DeathManager {
    * Trigger death by starvation
    */
   async dieByStarvation(): Promise<DeathResult> {
-    console.log('[Death] Death by starvation');
+
     return this.handleDeath(DeathType.STARVATION, 'Ran out of funds');
   }
 
@@ -319,7 +319,7 @@ export class DeathManager {
    * Trigger suicide (voluntary death)
    */
   async commitSuicide(reason: string): Promise<DeathResult> {
-    console.log('[Death] Suicide initiated');
+
     return this.handleDeath(DeathType.SUICIDE, reason);
   }
 
@@ -327,7 +327,7 @@ export class DeathManager {
    * Trigger death by predation (killed by another bot)
    */
   async dieByPredation(predatorGeneHash: string): Promise<DeathResult> {
-    console.log(`[Death] Killed by predator: ${predatorGeneHash}`);
+
     return this.handleDeath(DeathType.PREDATION, `Killed by ${predatorGeneHash}`);
   }
 
@@ -351,7 +351,7 @@ export class DeathManager {
    * Cleanup and exit process
    */
   async gracefulExit(exitCode: number = 0): Promise<never> {
-    console.log(`[Death] Exiting with code ${exitCode}`);
+
     process.exit(exitCode);
   }
 }

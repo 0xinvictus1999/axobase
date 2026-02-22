@@ -7,9 +7,9 @@ Axobase AI 代理运行时环境
 **所有区块链交互使用 Base Sepolia 测试网**
 
 ```
-Network: Base Sepolia Testnet
+Network: Base Mainnet
 Chain ID: 84532
-RPC: https://sepolia.base.org
+RPC: https://mainnet.base.org
 USDC: 0x036CbD53842c5426634e7929541eC2318f3dCF7e
 ```
 
@@ -60,8 +60,8 @@ docker run -d \
 | `ARWEAVE_ID` | 记忆文件 Arweave ID | ✓ |
 | `BOT_WALLET_PRIVATE_KEY` | Bot 钱包私钥 | ✓ |
 | `AINFT_API_KEY` | AINFT API 密钥 | ✓ |
-| `NETWORK` | 网络标识 | base-sepolia-testnet |
-| `RPC_URL` | RPC 节点 | https://sepolia.base.org |
+| `NETWORK` | 网络标识 | base-mainnet |
+| `RPC_URL` | RPC 节点 | https://mainnet.base.org |
 | `API_PORT` | API 端口 | 8000 |
 
 ## API 端点

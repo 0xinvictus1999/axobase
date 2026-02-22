@@ -11,7 +11,7 @@ This module implements the **x402 protocol** for autonomous AI agent payments, a
 - Handle 402 Payment Required responses with ERC-3009 signatures
 - Maintain audit trails via Git-tracked transaction logs
 
-> **Note**: This is an experimental framework on Base Sepolia testnet. No real assets are at risk.
+> **Note**: This is a production framework on Base Mainnet. Real assets are at risk - use with caution.
 
 ## Architecture
 
@@ -75,7 +75,7 @@ npm run test:x402
 |----------|----------|-------------|
 | `PRIVATE_KEY_GPG_PASSPHRASE` | Yes | GPG passphrase for wallet encryption |
 | `BASE_RPC_URL` | Yes | Base network RPC endpoint |
-| `NETWORK` | No | `base` or `baseSepolia` (default: baseSepolia) |
+| `NETWORK` | No | `base` (mainnet only) |
 | `AXO_HOME` | No | Project root path (default: /app) |
 | `AGENT_ID` | No | Unique agent identifier |
 | `HARDWARE_WALLET` | No | Enable hardware wallet mode (default: false) |
@@ -91,7 +91,7 @@ import { FeralPayment } from '@axobase/payment';
 
 const payment = new FeralPayment({
   agentId: 'my-axo-agent',
-  network: 'baseSepolia',
+  network: 'base',
 });
 
 await payment.initialize();

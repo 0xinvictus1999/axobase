@@ -11,9 +11,9 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur border-b border-slate-800">
-      {/* Testnet Banner */}
+      {/* Network Banner */}
       <div className="bg-yellow-500/90 text-black text-center py-1 text-xs font-bold">
-        ⚠️ {t('common.testnet')} - Base Sepolia
+        🌐 {t('common.network')} - Base Mainnet
       </div>
       
       <div className="container mx-auto px-4 py-3">

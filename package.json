@@ -1,7 +1,7 @@
 {
   "name": "axobase",
   "version": "1.0.0",
-  "description": "Axobase - AI Digital Life Autonomous Evolution Platform (Base L2)",
+  "description": "Axobase - AI Digital Life Autonomous Evolution Platform (Base L2 Mainnet)",
   "main": "dist/cli/axo.js",
   "type": "module",
   "scripts": {
@@ -21,10 +21,13 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "contract:compile": "hardhat compile",
     "contract:test": "hardhat test",
-    "contract:deploy": "hardhat run contracts/scripts/deploy.ts",
-    "contract:deploy:base": "hardhat run deploy/base/deploy.ts --network base",
+    "contract:deploy:mainnet": "hardhat run deploy/base/deploy.ts --network base",
     "contract:deploy:sepolia": "hardhat run deploy/base/deploy.ts --network baseSepolia",
+    "contract:verify:mainnet": "hardhat verify --network base",
+    "contract:verify:sepolia": "hardhat verify --network baseSepolia",
     "docker:build": "docker build -t axobase:latest .",
+    "docker:push": "docker push ghcr.io/0xinvictus1999/axobase:latest",
+    "generate-seed": "tsx scripts/generate-seed.ts",
     "rebrand": "node scripts/rebrand.js"
   },
   "keywords": [
@@ -34,7 +37,8 @@
     "blockchain",
     "evolution",
     "x402",
-    "arweave"
+    "arweave",
+    "mainnet"
   ],
   "author": "Axobase",
   "license": "MIT",
@@ -85,5 +89,13 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xinvictus1999/axobase.git"
+  },
+  "bugs": {
+    "url": "https://github.com/0xinvictus1999/axobase/issues"
+  },
+  "homepage": "https://github.com/0xinvictus1999/axobase#readme"
 }

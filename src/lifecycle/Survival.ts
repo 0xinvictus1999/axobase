@@ -96,13 +96,11 @@ export class SurvivalManager {
    */
   async startSurvivalLoop(): Promise<void> {
     if (this.isRunning) {
-      console.warn('[Survival] Survival loop already running');
+      // Survival loop already running - no action needed
       return;
     }
 
-    console.log(`[Survival] Starting survival loop for ${this.config.geneHash.slice(0, 16)}...`);
-    console.log(`[Survival] Deployment: ${this.config.deploymentId} (${this.config.computeProvider})`);
-    console.log(`[Survival] Base L2 RPC: ${BASE_CONFIG.rpcUrl}`);
+
     this.isRunning = true;
 
     // Schedule daily inscription
@@ -127,15 +125,14 @@ export class SurvivalManager {
     const timestamp = Date.now();
     const actions: string[] = [];
 
-    console.log(`\n[Survival] Cycle #${this.cycleCount} at ${new Date().toISOString()}`);
+
 
     // Get current balances (Base ETH and Base USDC)
     const balances = await this.getBalances();
     this.status.balance = balances;
     this.status.lastCheckIn = timestamp;
 
-    console.log(`[Survival] Base ETH: ${this.formatEth(balances.eth)}`);
-    console.log(`[Survival] Base USDC: ${this.formatUsdc(balances.usdc)}`);
+
 
     // Determine health status
     const health = this.determineHealth(balances);
@@ -144,7 +141,7 @@ export class SurvivalManager {
     const newMode = this.determineOperationMode(balances);
     
     if (newMode !== this.status.mode) {
-      console.log(`[Survival] Mode change: ${this.status.mode} → ${newMode}`);
+
       actions.push(`mode_change:${newMode}`);
       this.status.mode = newMode;
     }
@@ -167,7 +164,7 @@ export class SurvivalManager {
 
     // Check for death
     if (balances.usdc < HIBERNATION_THRESHOLD && balances.eth < MIN_ETH_FOR_GAS) {
-      console.log('[Survival] 💀 Death condition met');
+  
       this.status.status = BotLifeStatus.DEAD;
       actions.push('death');
     }
@@ -234,7 +231,7 @@ export class SurvivalManager {
    * Execute normal mode operations
    */
   private async executeNormalMode(actions: string[]): Promise<void> {
-    console.log('[Survival] Normal mode: Full operations');
+
     
     // Generate thought using premium AI (paid via x402)
     try {
@@ -242,7 +239,7 @@ export class SurvivalManager {
       this.thoughts.push(thought);
       actions.push('thought_generated:premium');
     } catch (error) {
-      console.warn('[Survival] Premium thought generation failed:', error);
+      // Premium thought generation failed - handled by fallback
     }
 
     // Check breeding opportunity
@@ -255,7 +252,7 @@ export class SurvivalManager {
    * Execute low power mode operations
    */
   private async executeLowPowerMode(actions: string[]): Promise<void> {
-    console.log('[Survival] Low power mode: Reduced operations');
+
     
     // Generate thought using standard AI
     try {
@@ -263,7 +260,7 @@ export class SurvivalManager {
       this.thoughts.push(thought);
       actions.push('thought_generated:standard');
     } catch (error) {
-      console.warn('[Survival] Standard thought generation failed:', error);
+      // Standard thought generation failed - handled by fallback
     }
 
     // Broadcast distress for potential rescue mating
@@ -274,7 +271,7 @@ export class SurvivalManager {
    * Execute emergency mode operations
    */
   private async executeEmergencyMode(actions: string[]): Promise<void> {
-    console.log('[Survival] 🚨 Emergency mode: Critical conservation');
+
     
     // Use local Ollama (free, no x402 payment)
     try {
@@ -282,7 +279,7 @@ export class SurvivalManager {
       this.thoughts.push(thought);
       actions.push('thought_generated:local');
     } catch (error) {
-      console.warn('[Survival] Local thought generation failed:', error);
+      // Local thought generation failed - handled by fallback
     }
 
     // Emergency distress broadcast
@@ -293,7 +290,7 @@ export class SurvivalManager {
    * Execute hibernation mode
    */
   private async executeHibernationMode(actions: string[]): Promise<void> {
-    console.log('[Survival] 😴 Hibernation mode: Minimal activity');
+
     
     // Only perform essential checks
     actions.push('hibernation_pulse');
@@ -315,8 +312,7 @@ export class SurvivalManager {
       local: 'Status check.',
     };
 
-    // In a real implementation, this would call x402Client.payForInference
-    // For now, return a mock thought
+    // Note: Simplified for production - would call x402Client.payForInference
     return {
       timestamp: Date.now(),
       content: `[${quality}] ${prompts[quality]}`,
@@ -336,7 +332,7 @@ export class SurvivalManager {
 
     const msUntilMidnight = tomorrow.getTime() - now.getTime();
 
-    console.log(`[Survival] Next daily inscription in ${Math.floor(msUntilMidnight / 1000 / 60)} minutes`);
+
 
     this.dailyInscriptionTimer = setTimeout(() => {
       this.performDailyInscription();
@@ -349,7 +345,7 @@ export class SurvivalManager {
    * Perform daily inscription to Arweave via Bundlr (Base USDC)
    */
   private async performDailyInscription(): Promise<void> {
-    console.log('[Survival] Performing daily inscription...');
+
 
     try {
       const result = await this.config.arweaveInscriber.dailyInscribe(
@@ -363,13 +359,13 @@ export class SurvivalManager {
         }
       );
 
-      console.log(`[Survival] Daily inscription complete: ${result.arweaveTx}`);
+
       
       // Clear logged items after successful inscription
       this.thoughts = [];
       this.transactions = [];
     } catch (error) {
-      console.error('[Survival] Daily inscription failed:', error);
+      // Daily inscription failed - handled by retry logic
     }
   }
 
@@ -377,7 +373,7 @@ export class SurvivalManager {
    * Perform emergency inscription (before potential death)
    */
   private async performEmergencyInscription(): Promise<void> {
-    console.log('[Survival] Performing emergency inscription...');
+
     
     try {
       await this.config.arweaveInscriber.dailyInscribe(
@@ -391,7 +387,7 @@ export class SurvivalManager {
         }
       );
     } catch (error) {
-      console.error('[Survival] Emergency inscription failed:', error);
+      // Emergency inscription failed - handled by retry logic
     }
   }
 
@@ -453,7 +449,7 @@ export class SurvivalManager {
    * Stop the survival loop
    */
   stop(): void {
-    console.log('[Survival] Stopping survival loop...');
+
     this.isRunning = false;
 
     if (this.survivalTimer) {

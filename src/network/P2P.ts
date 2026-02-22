@@ -54,7 +54,7 @@ export class P2PNetwork {
    * Initialize libp2p node
    */
   async initialize(): Promise<void> {
-    console.log('[P2P] Initializing libp2p node...');
+
 
     const options: Libp2pOptions = {
       transports: [tcp(), webSockets()],
@@ -87,15 +87,15 @@ export class P2PNetwork {
 
     // Handle peer discovery
     this.node.addEventListener('peer:discovery', (event: any) => {
-      console.log(`[P2P] Discovered peer: ${event.detail.id.toString()}`);
+  
     });
 
     // Handle peer connection
     this.node.connectionManager.addEventListener('peer:connect', (event: any) => {
-      console.log(`[P2P] Connected to peer: ${event.detail.remotePeer.toString()}`);
+  
     });
 
-    console.log(`[P2P] Node initialized with ID: ${this.node.peerId.toString()}`);
+
   }
 
   /**
@@ -103,7 +103,7 @@ export class P2PNetwork {
    */
   async start(): Promise<void> {
     await this.node.start();
-    console.log('[P2P] Node started');
+
 
     // Broadcast initial status
     await this.broadcastStatus();
@@ -114,7 +114,7 @@ export class P2PNetwork {
    */
   async stop(): Promise<void> {
     await this.node.stop();
-    console.log('[P2P] Node stopped');
+
   }
 
   /**
@@ -145,7 +145,7 @@ export class P2PNetwork {
     };
 
     await this.publish(AXO_TOPIC, message);
-    console.log(`[P2P] Broadcasted distress: ${reason}`);
+
   }
 
   /**
@@ -176,7 +176,7 @@ export class P2PNetwork {
     await this.publish(MATING_TOPIC, message);
     this.proposals.set(proposal.proposerGeneHash, proposal);
 
-    console.log(`[P2P] Sent mating proposal to ${targetGeneHash.slice(0, 16)}...`);
+
 
     return proposal;
   }
@@ -213,7 +213,7 @@ export class P2PNetwork {
     proposal.status = 'accepted';
     this.proposals.set(proposal.proposerGeneHash, proposal);
 
-    console.log(`[P2P] Accepted mating proposal from ${proposal.proposerGeneHash.slice(0, 16)}...`);
+
   }
 
   /**
@@ -337,7 +337,7 @@ export class P2PNetwork {
       return;
     }
 
-    console.log(`[P2P] Received mating proposal from ${proposal.proposerGeneHash.slice(0, 16)}...`);
+
 
     // Store proposal
     this.proposals.set(proposal.proposerGeneHash, proposal);
@@ -371,10 +371,7 @@ export class P2PNetwork {
     const proposal = this.proposals.get(originalProposal.targetGeneHash);
     if (proposal) {
       proposal.status = accepted ? 'accepted' : 'rejected';
-      console.log(
-        `[P2P] Mating proposal ${accepted ? 'accepted' : 'rejected'} by ${originalProposal.targetGeneHash.slice(0, 16)}...`,
-        reason || ''
-      );
+
     }
   }
 
@@ -382,7 +379,7 @@ export class P2PNetwork {
    * Handle distress signal
    */
   private handleDistressMessage(message: P2PMessage): void {
-    console.log(`[P2P] Distress from ${message.from.slice(0, 16)}...: ${message.payload.reason}`);
+
     // Could implement rescue logic here
   }
 

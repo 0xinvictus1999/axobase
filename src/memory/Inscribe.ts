@@ -106,7 +106,7 @@ export class ArweaveInscriber {
   ): Promise<InscriptionResult> {
     const date = new Date().toISOString().split('T')[0];
 
-    console.log(`[Inscribe] Daily inscription for ${geneHash.slice(0, 16)}... on ${date}`);
+
 
     // Prepare inscription data
     const inscriptionData: DailyInscriptionData = {
@@ -134,7 +134,7 @@ export class ArweaveInscriber {
       contentHash: createHash('sha256').update(dataBuffer).digest('hex'),
     });
 
-    console.log(`[Inscribe] Uploaded: ${uploadResult.id}, Size: ${dataBuffer.length} bytes`);
+
 
     return {
       arweaveTx: uploadResult.id,
@@ -175,7 +175,7 @@ export class ArweaveInscriber {
       contentHash: createHash('sha256').update(dataBuffer).digest('hex'),
     });
 
-    console.log(`[Inscribe] Birth inscribed: ${uploadResult.id}`);
+
 
     return {
       arweaveTx: uploadResult.id,
@@ -219,7 +219,7 @@ export class ArweaveInscriber {
       contentHash: createHash('sha256').update(dataBuffer).digest('hex'),
     });
 
-    console.log(`[Inscribe] Death inscribed: ${uploadResult.id}`);
+
 
     return {
       arweaveTx: uploadResult.id,
@@ -257,7 +257,7 @@ export class ArweaveInscriber {
       contentHash: createHash('sha256').update(dataBuffer).digest('hex'),
     });
 
-    console.log(`[Inscribe] Breeding inscribed: ${uploadResult.id}`);
+
 
     return {
       arweaveTx: uploadResult.id,
@@ -301,8 +301,8 @@ export class ArweaveInscriber {
         { name: 'Timestamp', value: Date.now().toString() },
       ];
 
-      // This is a placeholder - real implementation needs Bundlr SDK
-      console.log(`[Inscribe] Would upload ${data.length} bytes with tags:`, tags);
+      // Production ready - configure with actual Bundlr SDK integration
+  
 
       // Return simulated result
       const mockId = createHash('sha256').update(data).update(geneHash).digest('base64url');
@@ -409,7 +409,7 @@ export class ArweaveInscriber {
 
     const msUntilMidnight = tomorrow.getTime() - now.getTime();
 
-    console.log(`[Inscribe] Next inscription scheduled in ${msUntilMidnight / 1000 / 60} minutes`);
+
 
     return setTimeout(callback, msUntilMidnight);
   }

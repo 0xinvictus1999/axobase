@@ -107,7 +107,7 @@ export class SecureMemory {
   }
 
   /**
-   * Get memory statistics (for debugging, no sensitive data)
+   * Get memory statistics (for monitoring, no sensitive data)
    */
   getStats(): { entries: number; tags: string[] } {
     return {
@@ -122,7 +122,7 @@ export class SecureMemory {
    */
   private registerCleanupHandlers(): void {
     const cleanup = () => {
-      console.log('[SecureMemory] Emergency cleanup initiated...');
+
       this.clearAll();
       process.exit(0);
     };
@@ -138,7 +138,7 @@ export class SecureMemory {
 
     // Handle uncaught exceptions
     process.on('uncaughtException', (err) => {
-      console.error('[SecureMemory] Uncaught exception, wiping memory:', err);
+    // Uncaught exception - wiping sensitive memory before exit
       this.clearAll();
       process.exit(1);
     });

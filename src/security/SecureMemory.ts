@@ -161,7 +161,7 @@ export class SecureMemory implements SecureBuffer {
   }
 
   /**
-   * Get count of active secure buffers (for debugging)
+   * Get count of active secure buffers (for monitoring)
    */
   static getActiveCount(): number {
     return activeBuffers.size;
@@ -175,7 +175,7 @@ export class SecureMemory implements SecureBuffer {
   }
 
   /**
-   * Prevent string coercion - returns placeholder
+   * Prevent string coercion - returns safe value
    */
   toString(): string {
     return '[SecureMemory]';

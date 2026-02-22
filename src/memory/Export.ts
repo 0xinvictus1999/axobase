@@ -73,7 +73,7 @@ export class MemoryExporter {
       throw new Error(`No memory files found for agent ${agent}`);
     }
 
-    console.log(`[Export] Found ${memoryFiles.length} memory files for ${agent}`);
+
 
     // Create tar.gz archive
     const timestamp = Date.now();
@@ -93,11 +93,11 @@ export class MemoryExporter {
       memoryFiles.map((f) => path.relative(agentDir, f))
     );
 
-    console.log(`[Export] Created archive: ${archivePath}`);
+
 
     // Compute Merkle Root as geneHash
     const geneHash = await this.computeGeneHash(memoryFiles);
-    console.log(`[Export] Computed geneHash: ${geneHash}`);
+
 
     // Get original file size
     const archiveStats = await fs.stat(archivePath);
@@ -130,7 +130,7 @@ export class MemoryExporter {
         this.gpgVault.getPlatformPublicKey()!
       );
 
-      console.log(`[Export] Encrypted to: ${encryptedPath}`);
+
     }
 
     // Create export marker
@@ -202,7 +202,7 @@ export class MemoryExporter {
         await fs.access(filePath);
         files.push(filePath);
       } catch {
-        console.warn(`[Export] Memory file not found: ${filename}`);
+        // Memory file not found - log to error tracking in production
       }
     }
 

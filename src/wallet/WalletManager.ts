@@ -20,7 +20,7 @@ import {
   Hex,
   TransactionRequest as ViemTxRequest,
 } from 'viem';
-import { base, baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import { SecureMemory } from '../security/SecureMemory.js';
 import { HDWallet } from './HDWallet.js';
@@ -82,7 +82,7 @@ const ERC3009_ABI = [
 
 export class WalletManager {
   private publicClient: ReturnType<typeof createPublicClient>;
-  private network: 'base' | 'baseSepolia';
+  private network: 'base';
   private usdcContract: Hex;
   private masterWallet: HDWallet;
 
@@ -90,17 +90,17 @@ export class WalletManager {
   private wallets: Map<string, WalletKeyPair> = new Map();
 
   constructor(config: { 
-    network: 'base' | 'baseSepolia';
+    network: 'base';
     rpcUrl?: string;
     usdcContract?: Hex;
     masterSeedPhrase: string;
   }) {
-    this.network = config.network;
+    this.network = config.network || 'base';
     this.usdcContract = config.usdcContract || this.getDefaultUSDCAddress();
 
     // Initialize public client
     this.publicClient = createPublicClient({
-      chain: config.network === 'base' ? base : baseSepolia,
+      chain: base,
       transport: http(config.rpcUrl),
     });
 
@@ -163,7 +163,7 @@ export class WalletManager {
     // Create wallet client
     const walletClient = createWalletClient({
       account,
-      chain: this.network === 'base' ? base : baseSepolia,
+      chain: base,
       transport: http(),
     });
 
@@ -324,7 +324,7 @@ export class WalletManager {
     // Create wallet client
     const walletClient = createWalletClient({
       account,
-      chain: this.network === 'base' ? base : baseSepolia,
+      chain: base,
       transport: http(),
     });
 
@@ -363,7 +363,7 @@ export class WalletManager {
   private getDefaultUSDCAddress(): Hex {
     return this.network === 'base'
       ? '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' // Base mainnet USDC
-      : '0x036CbD53842c5426634e7929541eC2318f3dCF7e'; // Base Sepolia USDC
+      : '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'; // Base Mainnet USDC
   }
 
   /**

@@ -105,7 +105,7 @@ export default function Observatory() {
           <span className="text-sm text-cyber-green/60">TARGET:</span>
           <input
             type="text"
-            placeholder="Enter GeneHash or Wallet Address..."
+            placeholder="[YOUR_GENEHASH_OR_WALLET]..."
             className="flex-1 max-w-md bg-cyber-gray border border-cyber-green/30 px-4 py-2 text-sm 
                        placeholder-cyber-green/30 focus:border-cyber-green focus:outline-none
                        text-cyber-green"

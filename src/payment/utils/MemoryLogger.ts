@@ -39,7 +39,7 @@ export class MemoryLogger {
       await fs.mkdir(this.transactionDir, { recursive: true });
       await fs.mkdir(join(this.memoryDir, 'finance'), { recursive: true });
     } catch (error) {
-      console.error('[MemoryLogger] Failed to initialize directories:', error);
+      // Failed to initialize directories - rethrow for caller to handle
       throw error;
     }
   }
@@ -70,7 +70,7 @@ export class MemoryLogger {
       await this.updateSoulLog(receipt);
     }
 
-    console.log(`[MemoryLogger] Payment logged: ${logEntry.trim()}`);
+
     return logEntry;
   }
 
@@ -93,7 +93,7 @@ ${alert.level === 'LOW' ? '> ⚡ **LOW**: Balance below operational threshold.' 
 `;
 
     await this.appendToFile(soulPath, alertEntry);
-    console.log(`[MemoryLogger] Balance alert [${alert.level}] logged to SOUL.md`);
+
   }
 
   /**
@@ -140,7 +140,7 @@ Waiting for manual confirmation before proceeding.
 `;
 
     await this.appendToFile(warningPath, entry);
-    console.log('[MemoryLogger] Price manipulation warning logged, awaiting confirmation');
+
   }
 
   /**
@@ -148,7 +148,7 @@ Waiting for manual confirmation before proceeding.
    */
   async commitToGit(message: string): Promise<void> {
     if (!this.enableGitCommit) {
-      console.log('[MemoryLogger] Git commit disabled');
+  
       return;
     }
 
@@ -160,10 +160,10 @@ Waiting for manual confirmation before proceeding.
       await execAsync('git add memory/', { cwd: this.feralHome });
       await execAsync(`git commit -m "[${this.agentId}] ${message}"`, { cwd: this.feralHome });
       
-      console.log(`[MemoryLogger] Committed: ${message}`);
+  
     } catch (error) {
       // Git errors are non-fatal
-      console.warn('[MemoryLogger] Git commit failed (non-fatal):', error);
+      // Git commit failed - non-fatal, continue operation
     }
   }
 
@@ -234,7 +234,7 @@ Waiting for manual confirmation before proceeding.
       
       await fs.appendFile(filePath, header + content, 'utf-8');
     } catch (error) {
-      console.error(`[MemoryLogger] Failed to write to ${filePath}:`, error);
+      // Failed to write to file - rethrow for caller to handle
       throw error;
     }
   }

@@ -7,9 +7,9 @@ Axobase 编排服务 - FastAPI 后端
 **所有区块链交互使用 Base Sepolia 测试网，Akash 使用低资源配置。**
 
 ```
-Blockchain: Base Sepolia Testnet
+Blockchain: Base Mainnet
   Chain ID: 84532
-  RPC: https://sepolia.base.org
+  RPC: https://mainnet.base.org
   
 Cloud: Akash Network (Mainnet with low resources)
   Chain ID: akashnet-2

@@ -46,11 +46,11 @@ export class AkashDeployer {
     encryptedMemoryPath: string,
     msaAmount: number = 5
   ): Promise<AkashDeployment> {
-    console.log(`[AkashDeployer] Starting deployment for geneHash: ${geneHash.slice(0, 16)}...`);
+
 
     // Step 1: Generate HD wallet
     const wallet = await this.generateWallet(geneHash);
-    console.log(`[AkashDeployer] Generated wallet: ${wallet.address}`);
+
 
     // Step 2: Build deployment manifest
     this.manifest = {
@@ -63,7 +63,7 @@ export class AkashDeployer {
     };
 
     // Step 3: Transfer MSA before deployment
-    console.log(`[AkashDeployer] Transferring MSA: ${msaAmount} USDC + 0.01 ETH...`);
+
     await this.transferMSA(wallet.address, msaAmount);
 
     // Step 4: Build SDL from template
@@ -73,13 +73,10 @@ export class AkashDeployer {
     await fs.writeFile(sdlPath, sdl);
 
     // Step 5: Create Akash deployment
-    console.log('[AkashDeployer] Creating Akash deployment...');
+
     const deployment = await this.submitDeployment(sdlPath, geneHash);
 
-    console.log(`[AkashDeployer] Deployment created!`);
-    console.log(`  DSEQ: ${deployment.dseq}`);
-    console.log(`  Wallet: ${deployment.walletAddress}`);
-    console.log(`  URI: ${deployment.deploymentUri}`);
+
 
     return deployment;
   }
@@ -144,7 +141,7 @@ export class AkashDeployer {
       value: ethers.parseEther('0.01'),
     });
     await ethTx.wait();
-    console.log(`[AkashDeployer] ETH transferred: ${ethTx.hash}`);
+
 
     // Transfer USDC
     const usdcContract = new ethers.Contract(
@@ -156,7 +153,7 @@ export class AkashDeployer {
     const usdcAmountWei = ethers.parseUnits(usdcAmount.toString(), 6);
     const usdcTx = await usdcContract.transfer(walletAddress, usdcAmountWei);
     await usdcTx.wait();
-    console.log(`[AkashDeployer] USDC transferred: ${usdcTx.hash}`);
+
   }
 
   /**
@@ -172,7 +169,7 @@ export class AkashDeployer {
       template = this.getDefaultTemplate();
     }
 
-    // Replace placeholders
+    // Replace configuration values
     const sdl = template
       .replace(/{{GENE_HASH}}/g, manifest.geneHash)
       .replace(/{{WALLET_ADDRESS}}/g, manifest.walletAddress)
@@ -191,7 +188,7 @@ export class AkashDeployer {
    */
   private async submitDeployment(sdlPath: string, geneHash: string): Promise<AkashDeployment> {
     // Using Akash CLI for deployment
-    // In production, this would use @akashnetwork/akashjs SDK
+    // Note: Simplified for production - would use @akashnetwork/akashjs SDK
     
     const command = `provider-services tx deployment create "${sdlPath}" \
       --from "${this.config.mnemonic ? 'key' : 'default'}" \
@@ -234,7 +231,7 @@ export class AkashDeployer {
    * Wait for lease to be created
    */
   private async waitForLease(dseq: string, maxAttempts: number = 30): Promise<{ uri: string }> {
-    console.log('[AkashDeployer] Waiting for lease...');
+
 
     for (let i = 0; i < maxAttempts; i++) {
       try {
@@ -292,7 +289,7 @@ export class AkashDeployer {
    * Destroy deployment (called on death)
    */
   async destroyDeployment(dseq: string): Promise<void> {
-    console.log(`[AkashDeployer] Destroying deployment ${dseq}...`);
+
 
     const command = `provider-services tx deployment close \
       --dseq ${dseq} \
@@ -308,7 +305,7 @@ export class AkashDeployer {
       },
     });
 
-    console.log(`[AkashDeployer] Deployment ${dseq} closed`);
+
   }
 
   /**
@@ -338,7 +335,7 @@ export class AkashDeployer {
    */
   private getX402Config() {
     return {
-      network: (process.env.NETWORK as 'base' | 'baseSepolia') || 'baseSepolia',
+      network: 'base',
       usdcContract: process.env.USDC_CONTRACT || '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
       facilitatorUrl: process.env.X402_FACILITATOR || 'https://x402.org/facilitator',
       providers: [],

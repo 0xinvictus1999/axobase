@@ -8,9 +8,9 @@ Axobase 放养平台 - Next.js 14 Web 前端
 
 ```
 Chain ID: 84532
-Network: Base Sepolia Testnet
-RPC: https://sepolia.base.org
-Block Explorer: https://sepolia.basescan.org
+Network: Base Mainnet
+RPC: https://mainnet.base.org
+Block Explorer: https://basescan.org
 ```
 
 ## 技术栈
@@ -65,9 +65,9 @@ cp .env.local.example .env.local
 
 ```env
 NEXT_PUBLIC_CONTRACT_ADDRESS=0x...  # AxoRite 合约地址
-NEXT_PUBLIC_RPC_URL=https://sepolia.base.org
+NEXT_PUBLIC_RPC_URL=https://mainnet.base.org
 NEXT_PUBLIC_CHAIN_ID=84532
-NEXT_PUBLIC_PLATFORM_API_URL=http://localhost:8000
+NEXT_PUBLIC_PLATFORM_API_URL=[YOUR_API_ENDPOINT]
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=...  # 可选
 ```
 

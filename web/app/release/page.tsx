@@ -14,11 +14,11 @@ import {
   useIsCorrectNetwork, 
   useSoulExists, 
   useRegisterFeral,
-  BASE_SEPOLIA_CHAIN_ID 
+  BASE_CHAIN_ID 
 } from '@/hooks/useFeralContract'
 
 // ============================================
-// ⚠️ Base Sepolia Testnet Only
+// Base Mainnet Configuration
 // ============================================
 
 export default function ReleasePage() {
@@ -89,14 +89,14 @@ export default function ReleasePage() {
   }
 
   const getExplorerUrl = (txHash: string) => {
-    return `https://sepolia.basescan.org/tx/${txHash}`
+    return `https://basescan.org/tx/${txHash}`
   }
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       {/* 测试网水印 */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-500/90 text-black text-center py-1 text-sm font-bold">
-        ⚠️ TESTNET ONLY - Base Sepolia 测试网
+        🌐 Base Mainnet 主网
       </div>
 
       <div className="container mx-auto px-4 pt-16 pb-20 max-w-2xl">
@@ -145,7 +145,7 @@ export default function ReleasePage() {
                       ⚠️ 请切换至 Base Sepolia 测试网
                     </p>
                     <p className="text-red-400/70 text-center text-sm mt-2">
-                      Chain ID: {BASE_SEPOLIA_CHAIN_ID}
+                      Chain ID: {BASE_CHAIN_ID}
                     </p>
                   </div>
                 )}
@@ -293,7 +293,7 @@ export default function ReleasePage() {
 
         <div className="mt-8 text-center text-xs text-slate-600">
           <p>Axobase - 去中心化 AI 放养平台</p>
-          <p className="mt-1">Network: Base Sepolia Testnet (Chain ID: 84532)</p>
+          <p className="mt-1">Network: Base Mainnet (Chain ID: 8453)</p>
         </div>
       </div>
     </main>

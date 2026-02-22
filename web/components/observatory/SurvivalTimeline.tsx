@@ -97,7 +97,7 @@ export function SurvivalTimeline({ survivalDays, geneHash }: SurvivalTimelinePro
                   <div className="flex gap-2">
                     {event.txHash && (
                       <a 
-                        href={`https://sepolia.basescan.org/tx/${event.txHash}`}
+                        href={`https://basescan.org/tx/${event.txHash}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-cyber-blue/60 hover:text-cyber-blue"

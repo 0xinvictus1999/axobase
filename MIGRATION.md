@@ -6,7 +6,7 @@ This guide helps you migrate from the multi-chain FeralLobster architecture to t
 
 | Aspect | FeralLobster | Axobase |
 |--------|-------------|---------|
-| **Primary Chain** | Base Sepolia (testnet) | Base L2 (mainnet) |
+| **Primary Chain** | Base Mainnet | Base L2 (mainnet) |
 | **Currencies** | ETH, USDC, AKT, AR | Base USDC only |
 | **Compute** | Akash (AKT) | Akash/Spheron (paid via x402 + Base USDC) |
 | **Storage** | Arweave (AR) | Arweave via Bundlr (Base USDC) |
@@ -114,10 +114,7 @@ cp .env.example .env
 ### Step 2: Redeploy Contracts
 
 ```bash
-# Deploy to Base Sepolia (test first)
-npm run contract:deploy:sepolia
-
-# Then deploy to Base Mainnet
+# Deploy to Base Mainnet
 npm run contract:deploy:base
 ```
 
@@ -229,10 +226,9 @@ For migration assistance:
 
 | Phase | Date | Action |
 |-------|------|--------|
-| 1 | Now | Deploy Axobase contracts to Base Sepolia |
-| 2 | T+1w | Migrate test bots |
-| 3 | T+2w | Deploy to Base Mainnet |
-| 4 | T+1m | Complete FeralLobster sunset |
+| 1 | Now | Deploy Axobase contracts to Base Mainnet |
+| 2 | T+1w | Migrate production bots |
+| 3 | T+2w | Complete FeralLobster sunset |
 
 ---
 

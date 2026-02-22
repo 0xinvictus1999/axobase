@@ -23,7 +23,7 @@ import configJson from './config/x402.json';
 export interface FeralPaymentOptions {
   agentId: string;
   feralHome?: string;
-  network?: 'base' | 'baseSepolia';
+  network?: 'base';
   gpgPassphrase?: string;
   hardwareWallet?: boolean;
   enableGitCommit?: boolean;
@@ -41,7 +41,7 @@ export class FeralPayment {
   constructor(options: FeralPaymentOptions) {
     this.options = {
       feralHome: process.env.AXO_HOME || '/app',
-      network: (process.env.NETWORK as 'base' | 'baseSepolia') || 'baseSepolia',
+      network: 'base',
       ...options,
     };
 
@@ -97,7 +97,7 @@ export class FeralPayment {
     await this.memoryLogger.initialize();
 
     this.initialized = true;
-    console.log(`[FeralPayment] Initialized for agent: ${this.options.agentId}`);
+
   }
 
   /**
@@ -146,7 +146,7 @@ export class FeralPayment {
         txHash: response.paymentHash,
       };
     } catch (error) {
-      console.error('[FeralPayment] Buy failed:', error);
+      // Buy failed - error handled in return value
       return {
         success: false,
         error: (error as Error).message,
@@ -297,7 +297,7 @@ export async function cli(command: string, args: string[]): Promise<void> {
       const agentId = args.find(a => a.startsWith('--agent-id='))?.split('=')[1] || 'default';
       const payment = new FeralPayment({ agentId });
       const backupPath = await payment.exportWallet(gpgKeyId);
-      console.log(`Wallet exported to: ${backupPath}`);
+  
       break;
     }
 

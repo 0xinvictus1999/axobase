@@ -1,12 +1,12 @@
 'use client'
 
 import { useReadContract, useWriteContract, useAccount, useChainId } from 'wagmi'
-import { CONTRACT_ADDRESS, AXO_RITE_ABI, BASE_SEPOLIA_CHAIN_ID } from '@/lib/contract'
+import { CONTRACT_ADDRESS, AXO_RITE_ABI, BASE_CHAIN_ID } from '@/lib/contract'
 import { parseUnits } from 'viem'
 
 // ============================================
 // AxoRite 合约 Hooks
-// ⚠️ Base Sepolia Testnet Only
+// Base Mainnet Configuration
 // ============================================
 
 export interface FeralSoul {
@@ -30,7 +30,7 @@ export interface RegisterFeralArgs {
  */
 export function useIsCorrectNetwork(): boolean {
   const chainId = useChainId()
-  return chainId === BASE_SEPOLIA_CHAIN_ID
+  return chainId === BASE_CHAIN_ID
 }
 
 /**

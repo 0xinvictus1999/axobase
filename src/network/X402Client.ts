@@ -61,7 +61,7 @@ export class X402Client {
     usdcAmount: string,
     deploymentConfig: any
   ): Promise<{ success: boolean; txHash?: Hex; deploymentId?: string }> {
-    console.log(`[X402] Paying for ${provider} compute: ${usdcAmount} USDC`);
+
 
     const providerEndpoints: Record<string, string> = {
       akash: 'https://api.akashnet.io/x402/pay',
@@ -111,7 +111,7 @@ export class X402Client {
     data: Buffer,
     tags: Record<string, string> = {}
   ): Promise<{ arweaveTxId: string; baseTxHash?: Hex; cost: string }> {
-    console.log(`[X402] Paying for Arweave storage: ${data.length} bytes`);
+
 
     try {
       // Use Bundlr with Base USDC
@@ -123,7 +123,7 @@ export class X402Client {
       });
       
       const price = priceResponse.data.price;
-      console.log(`[X402] Storage price: ${price} USDC`);
+  
 
       // Get wallet for signing
       const wallet = this.walletManager.getWallet(this.geneHash);
@@ -198,7 +198,7 @@ export class X402Client {
     prompt: string,
     options: { temperature?: number; maxTokens?: number } = {}
   ): Promise<InferenceResult> {
-    console.log(`[X402] Paying for AI inference: ${provider.name}`);
+
 
     // First request without payment
     const initialResponse = await axios.post(

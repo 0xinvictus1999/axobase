@@ -89,7 +89,7 @@ export interface DeploymentManifest {
 
 export interface X402Config {
   /** Blockchain network */
-  network: 'base' | 'baseSepolia';
+  network: 'base';
   /** USDC contract address */
   usdcContract: string;
   /** x402 facilitator URL */
@@ -383,7 +383,7 @@ export interface ContractAddresses {
 
 export interface CLIConfig {
   feralHome: string;
-  network: 'base' | 'baseSepolia';
+  network: 'base';
   privateKeyGPGPassphrase: string;
 }
 

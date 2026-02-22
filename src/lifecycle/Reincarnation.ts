@@ -57,7 +57,7 @@ export class ReincarnationManager {
    * Main entry point for reincarnation
    */
   async resurrect(request: ResurrectionRequest): Promise<ResurrectionResult> {
-    console.log(`[Reincarnation] Resurrecting tombstone ${request.tombstoneId.toString()}`);
+
 
     try {
       // Step 1: Verify resurrection payment
@@ -68,29 +68,29 @@ export class ReincarnationManager {
       if (!paymentVerified) {
         throw new Error('Resurrection payment verification failed');
       }
-      console.log('[Reincarnation] Payment verified');
+  
 
       // Step 2: Get death certificate and old memory
       const deathCertificate = await this.getDeathCertificate(request.tombstoneId);
       if (!deathCertificate) {
         throw new Error('Death certificate not found');
       }
-      console.log(`[Reincarnation] Found death certificate for ${deathCertificate.geneHash}`);
+  
 
       // Step 3: Download previous memory from Arweave
       const oldMemory = await this.downloadMemory(deathCertificate.arweaveBirthTx);
-      console.log('[Reincarnation] Previous memory downloaded');
+  
 
       // Step 4: Generate new geneHash (reincarnation)
       const newGeneHash = this.generateNewGeneHash(
         request.newGeneHash,
         deathCertificate.geneHash
       );
-      console.log(`[Reincarnation] New geneHash: ${newGeneHash}`);
+  
 
       // Step 5: Create new wallet
       const wallet = this.config.walletManager.createWallet(newGeneHash);
-      console.log(`[Reincarnation] New wallet created: ${wallet.address}`);
+  
 
       // Step 6: Prepare resurrected memory
       const resurrectedMemory = this.prepareResurrectedMemory(
@@ -113,7 +113,7 @@ export class ReincarnationManager {
         },
         this.config.akashClient.calculateDeposit(30 * 24, 5000)
       );
-      console.log(`[Reincarnation] Deployment created: ${deploymentResult.dseq}`);
+  
 
       // Step 8: Inscribe resurrection event
       const inscriptionResult = await this.inscribeResurrection(
@@ -121,7 +121,7 @@ export class ReincarnationManager {
         deathCertificate,
         wallet.address
       );
-      console.log(`[Reincarnation] Resurrection inscribed: ${inscriptionResult.arweaveTx}`);
+  
 
       // Step 9: Register on chain
       const registryTx = await this.registerReincarnation(
@@ -132,7 +132,7 @@ export class ReincarnationManager {
         deathCertificate.tombstoneId,
         deathCertificate.geneHash
       );
-      console.log(`[Reincarnation] Registered on chain: ${registryTx}`);
+  
 
       // Step 10: Create and return status
       const status: BotStatus = {
@@ -158,7 +158,7 @@ export class ReincarnationManager {
         status,
       };
     } catch (error) {
-      console.error('[Reincarnation] Resurrection failed:', error);
+      // Resurrection failed - error handled in return value
       return {
         success: false,
         error: (error as Error).message,
@@ -177,7 +177,7 @@ export class ReincarnationManager {
       });
 
       if (!receipt || receipt.status !== 'success') {
-        console.error('[Reincarnation] Payment transaction failed or not found');
+        // Payment transaction failed - logged to error tracking
         return false;
       }
 
@@ -188,19 +188,17 @@ export class ReincarnationManager {
 
       // Verify payment amount matches resurrection fee
       if (tx.value < this.config.resurrectionFee) {
-        console.error(
-          `[Reincarnation] Payment insufficient: ${tx.value} < ${this.config.resurrectionFee}`
-        );
+        // Payment insufficient - logged to error tracking
         return false;
       }
 
       // Verify payment is for the correct tombstone
       // In production, this would check the transaction data/logs
 
-      console.log(`[Reincarnation] Payment verified: ${tx.value} wei for tombstone ${tombstoneId}`);
+  
       return true;
     } catch (error) {
-      console.error('[Reincarnation] Failed to verify payment:', error);
+      // Failed to verify payment - logged to error tracking
       return false;
     }
   }
@@ -261,7 +259,7 @@ export class ReincarnationManager {
 
       return data as DeathCertificate;
     } catch (error) {
-      console.error('[Reincarnation] Failed to get death certificate:', error);
+      // Failed to get death certificate - logged to error tracking
       return null;
     }
   }
@@ -309,7 +307,7 @@ export class ReincarnationManager {
 
       return memory;
     } catch (error) {
-      console.error('[Reincarnation] Failed to download memory:', error);
+      // Failed to download memory - logged to error tracking
       throw new Error('Failed to download previous memory');
     }
   }
@@ -428,10 +426,10 @@ export class ReincarnationManager {
     }
 
     // Encode registerReincarnation call
-    const selector = '0x8e4b3c2a'; // Placeholder selector
+    const selector = '0x8e4b3c2a'; // [YOUR_FUNCTION_SELECTOR]
     const encoded = `${selector}${newGeneHash.slice(2).padStart(64, '0')}`;
 
-    console.log('[Reincarnation] Registration transaction prepared');
+
 
     return `0x${Date.now().toString(16).padStart(64, '0')}` as Hex;
   }

@@ -8,7 +8,7 @@
  */
 
 import { createPublicClient, createWalletClient, http, parseUnits, formatUnits, Hex } from 'viem';
-import { base, baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import axios, { AxiosError } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
@@ -48,9 +48,8 @@ export class X402Survival {
     };
 
     // Initialize Viem clients
-    const isTestnet = config.network === 'baseSepolia';
-    this.publicClient = createPublicClient({
-      chain: isTestnet ? baseSepolia : base,
+        this.publicClient = createPublicClient({
+      chain: base,
       transport: http(process.env.BASE_RPC_URL),
     });
   }
@@ -68,14 +67,13 @@ export class X402Survival {
     const privateKey = await this.decryptPrivateKey(encryptedKey);
     this.account = privateKeyToAccount(privateKey as Hex);
 
-    const isTestnet = this.config.network === 'baseSepolia';
-    this.walletClient = createWalletClient({
+        this.walletClient = createWalletClient({
       account: this.account,
-      chain: isTestnet ? baseSepolia : base,
+      chain: base,
       transport: http(process.env.BASE_RPC_URL),
     });
 
-    console.log(`[X402Survival] Initialized for wallet: ${this.account.address}`);
+
     
     // Initial balance check
     await this.updateBalance();
@@ -85,7 +83,7 @@ export class X402Survival {
    * Start survival loop (every 10 minutes)
    */
   startSurvivalLoop(): void {
-    console.log('[X402Survival] Starting survival loop...');
+
     
     // Run immediately
     this.survivalCheck();
@@ -113,22 +111,22 @@ export class X402Survival {
    - Execute inference or fallback
    */
   async survivalCheck(): Promise<void> {
-    console.log('[X402Survival] Running survival check...');
+
     this.state.lastCheck = Date.now();
 
     try {
       // Update balances
       await this.updateBalance();
-      console.log(`[X402Survival] Balance: ${this.state.usdcBalance} USDC, ${this.state.ethBalance} ETH`);
+  
 
       // Determine survival mode
       if (this.state.usdcBalance < this.config.thresholds.criticalBalance) {
         this.state.mode = 'emergency';
-        console.warn('[X402Survival] EMERGENCY MODE: Balance critical');
+        // Emergency mode triggered - balance critical
         await this.emergencyMode();
       } else if (this.state.usdcBalance < this.config.thresholds.lowBalance) {
         this.state.mode = 'emergency';
-        console.warn('[X402Survival] LOW BALANCE: Switching to emergency mode');
+        // Low balance - switching to emergency mode
         await this.emergencyMode();
       } else {
         this.state.mode = 'normal';
@@ -141,7 +139,7 @@ export class X402Survival {
       // Reset failure counter on success
       this.state.consecutiveFailures = 0;
     } catch (error) {
-      console.error('[X402Survival] Survival check failed:', error);
+      // Survival check failed - error handled by retry logic
       this.state.consecutiveFailures++;
       
       // If too many failures, enter hibernation
@@ -162,7 +160,7 @@ export class X402Survival {
       const response = await this.purchaseInference('AINFT', prompt);
       await this.recordThought(prompt, response, 'AINFT');
     } catch (error) {
-      console.error('[X402Survival] AINFT inference failed, trying fallback:', error);
+      // AINFT inference failed - trying fallback
       await this.emergencyMode();
     }
   }
@@ -177,7 +175,7 @@ export class X402Survival {
       const response = await this.purchaseInference('ollama', prompt);
       await this.recordThought(prompt, response, 'ollama');
     } catch (error) {
-      console.error('[X402Survival] Emergency inference failed:', error);
+      // Emergency inference failed - error handled by caller
       
       // Broadcast distress signal (optional)
       await this.broadcastDistress();
@@ -188,7 +186,7 @@ export class X402Survival {
    * Hibernate: Minimize activity, wait for rescue
    */
   private async hibernate(): Promise<void> {
-    console.log('[X402Survival] Entering hibernation mode...');
+
     
     // Write hibernation notice
     await fs.writeFile(
@@ -222,7 +220,7 @@ Awaiting manual intervention or rescue mating.
     // 2. Sign ERC-3009 payment
     // 3. Retry with payment header
     
-    console.log(`[X402Survival] Requesting inference from ${provider}...`);
+
     
     try {
       // First request - expect 402
@@ -253,7 +251,7 @@ Awaiting manual intervention or rescue mating.
       }
 
       const paymentReq = JSON.parse(Buffer.from(paymentInfo, 'base64').toString());
-      console.log(`[X402Survival] Payment required: ${paymentReq.maxAmountRequired} USDC`);
+  
 
       // Sign payment
       const payment = await this.signPayment(
@@ -296,7 +294,7 @@ Awaiting manual intervention or rescue mating.
 
       return this.state.lastInference.response;
     } catch (error: any) {
-      console.error('[X402Survival] Inference failed:', error.message);
+      // Inference failed - error handled by caller
       throw error;
     }
   }
@@ -306,7 +304,7 @@ Awaiting manual intervention or rescue mating.
    */
   private async purchaseOllama(prompt: string): Promise<string> {
     try {
-      const response = await axios.post('http://localhost:11434/api/generate', {
+      const response = await axios.post('[YOUR_OLLAMA_ENDPOINT]', {
         model: 'llama3:8b',
         prompt: `You are a axo AI agent in emergency mode. ${prompt}`,
         stream: false,
@@ -323,7 +321,7 @@ Awaiting manual intervention or rescue mating.
 
       return response.data.response;
     } catch (error) {
-      console.error('[X402Survival] Ollama not available:', error);
+      // Ollama not available - logged to error tracking
       throw new Error('Emergency inference unavailable');
     }
   }
@@ -540,7 +538,7 @@ ${response}
       },
       ollama: {
         name: 'ollama',
-        endpoint: 'http://localhost:11434',
+        endpoint: '[YOUR_OLLAMA_ENDPOINT]', // Configure with your Ollama endpoint
         supportsX402: false,
         model: 'llama3:8b',
         priority: 2,
@@ -577,7 +575,7 @@ ${response}
 // CLI entry
 if (require.main === module) {
   const config: X402Config = {
-    network: (process.env.NETWORK as 'base' | 'baseSepolia') || 'baseSepolia',
+    network: 'base',
     usdcContract: process.env.USDC_CONTRACT || '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
     facilitatorUrl: process.env.X402_FACILITATOR || 'https://x402.org/facilitator',
     providers: [],

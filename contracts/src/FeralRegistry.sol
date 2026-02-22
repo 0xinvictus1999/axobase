@@ -239,7 +239,7 @@ contract AxoRegistry is Ownable, ReentrancyGuard {
      */
     function getActiveBots(uint256 offset, uint256 limit) external view returns (bytes32[] memory) {
         // This is a simplified implementation
-        // In production, you'd want an enumerable set
+        // In mainnet deployment, use an enumerable set
         bytes32[] memory active = new bytes32[](limit);
         uint256 count = 0;
         

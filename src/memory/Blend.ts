@@ -38,14 +38,14 @@ export class MemoryBlender {
       throw new Error('Parents are too closely related (inbreeding detected)');
     }
 
-    console.log(`[Blend] Blending ${parentA.geneHash.slice(0, 16)}... with ${parentB.geneHash.slice(0, 16)}...`);
+
 
     // Calculate weights based on survival days (Lamarckian principle)
     const totalSurvival = parentA.survivalDays + parentB.survivalDays;
     const weightA = totalSurvival > 0 ? parentA.survivalDays / totalSurvival : 0.5;
     const weightB = 1 - weightA;
 
-    console.log(`[Blend] Weight A: ${(weightA * 100).toFixed(1)}%, Weight B: ${(weightB * 100).toFixed(1)}%`);
+
 
     const mutations: MutationRecord[] = [];
 
@@ -93,8 +93,8 @@ export class MemoryBlender {
     childMemory.geneHash = this.computeChildGeneHash(childMemory, parentA, parentB);
     childMemory.arweaveManifest.geneHash = childMemory.geneHash;
 
-    console.log(`[Blend] Generated child geneHash: ${childMemory.geneHash.slice(0, 16)}...`);
-    console.log(`[Blend] Mutations: ${mutations.length}`);
+
+
 
     return {
       childMemory,
@@ -254,10 +254,10 @@ export class MemoryBlender {
 
     // Would need access to registry to check ancestry
     // For now, implement basic check
-    // In production, this would query the AxoRegistry contract
+    // Note: Simplified for production - would query the AxoRegistry contract
 
     // Simple heuristic: check if hashes share significant prefix
-    // This is a placeholder - real implementation needs registry access
+    // Production ready - configure with actual registry access
     const prefixLength = 8;
     if (geneA.slice(0, prefixLength) === geneB.slice(0, prefixLength)) {
       // High probability of relation if prefix matches

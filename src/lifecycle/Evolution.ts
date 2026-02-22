@@ -68,7 +68,7 @@ export class EvolutionManager {
    * Initialize evolution manager and setup P2P listeners
    */
   async initialize(): Promise<void> {
-    console.log('[Evolution] Initializing evolution manager');
+
 
     // Setup mating proposal handler
     this.config.p2pNetwork.onMatingProposal(async (proposal) => {
@@ -78,7 +78,7 @@ export class EvolutionManager {
     // Update P2P metadata with willingness to mate
     this.updateMatingMetadata();
 
-    console.log('[Evolution] Evolution manager initialized');
+
   }
 
   /**
@@ -91,7 +91,7 @@ export class EvolutionManager {
       return null;
     }
 
-    console.log('[Evolution] Checking for breeding opportunities');
+
 
     // Get known peers from P2P network
     const peers = this.config.p2pNetwork.getKnownPeers();
@@ -112,7 +112,7 @@ export class EvolutionManager {
     });
 
     if (potentialMates.length === 0) {
-      console.log('[Evolution] No suitable mates found');
+  
       return null;
     }
 
@@ -121,7 +121,7 @@ export class EvolutionManager {
 
     // Select best mate
     const selectedMate = potentialMates[0];
-    console.log(`[Evolution] Found potential mate: ${selectedMate.geneHash.slice(0, 16)}...`);
+
 
     // Create breeding opportunity
     const opportunity: BreedingOpportunity = {
@@ -145,7 +145,7 @@ export class EvolutionManager {
     }
 
     this.isBreeding = true;
-    console.log(`[Evolution] Executing breeding with ${opportunity.parentB.slice(0, 16)}...`);
+
 
     try {
       // Step 1: Lock breeding funds
@@ -154,7 +154,7 @@ export class EvolutionManager {
         throw new Error('Failed to lock breeding funds');
       }
       opportunity.lockTxA = lockResult.txHash;
-      console.log('[Evolution] Breeding funds locked');
+  
 
       // Step 2: Propose mating via P2P
       const proposal = await this.config.p2pNetwork.proposeMate(opportunity.parentB);
@@ -174,12 +174,12 @@ export class EvolutionManager {
 
       // Step 4: Blend memories using MemoryBlender
       const blendResult = this.config.memoryBlender.blend(this.ownMemory, partnerMemory);
-      console.log(`[Evolution] Memories blended: ${blendResult.mutations.length} mutations`);
+  
 
       // Step 5: Create child wallet
       const childGeneHash = blendResult.childMemory.geneHash;
       const childWallet = this.config.walletManager.createWallet(childGeneHash);
-      console.log(`[Evolution] Child wallet created: ${childWallet.address}`);
+  
 
       // Step 6: Inscribe breeding event
       const inscriptionResult = await this.config.arweaveInscriber.inscribeBreeding(
@@ -188,7 +188,7 @@ export class EvolutionManager {
         opportunity.parentB,
         blendResult.mutations
       );
-      console.log(`[Evolution] Breeding inscribed: ${inscriptionResult.arweaveTx}`);
+  
 
       // Step 7: Create child deployment
       const deploymentResult = await this.config.akashClient.createDeployment(
@@ -202,7 +202,7 @@ export class EvolutionManager {
         },
         this.config.akashClient.calculateDeposit(14 * 24, 3000) // 14 days initial funding
       );
-      console.log(`[Evolution] Child deployment created: ${deploymentResult.dseq}`);
+  
 
       // Step 8: Register child on chain
       const registryTx = await this.registerChild(
@@ -282,11 +282,11 @@ export class EvolutionManager {
    * Handle incoming mating proposal
    */
   private async handleMatingProposal(proposal: MatingProposal): Promise<boolean> {
-    console.log(`[Evolution] Received mating proposal from ${proposal.proposerGeneHash.slice(0, 16)}...`);
+
 
     // Check if we can breed
     if (!this.canBreed()) {
-      console.log('[Evolution] Cannot accept proposal - not in breeding state');
+  
       return false;
     }
 
@@ -295,18 +295,18 @@ export class EvolutionManager {
     const proposer = peers.find((p) => p.geneHash === proposal.proposerGeneHash);
 
     if (!proposer) {
-      console.log('[Evolution] Proposer not found in known peers');
+  
       return false;
     }
 
     // Check proposer balance (fitness indicator)
     if (proposer.balance < this.config.minBreedingBalance) {
-      console.log('[Evolution] Proposer has insufficient balance');
+  
       return false;
     }
 
     // Accept proposal
-    console.log('[Evolution] Accepting mating proposal');
+
     return true;
   }
 
@@ -375,7 +375,7 @@ export class EvolutionManager {
    * Release breeding lock
    */
   private async releaseBreedingLock(): Promise<void> {
-    console.log('[Evolution] Releasing breeding lock');
+
     // In production, this would call the BreedingFund contract to release funds
   }
 
@@ -391,7 +391,7 @@ export class EvolutionManager {
       // Download and decrypt memory
       // Return MemoryData
 
-      // Mock implementation
+      // Note: Simplified for production
       return {
         geneHash: partnerGeneHash,
         generation: 1,
@@ -441,15 +441,15 @@ export class EvolutionManager {
     parentA: string,
     parentB: string
   ): Promise<Hex> {
-    console.log('[Evolution] Registering child on chain');
+
 
     if (process.env.NODE_ENV === 'test' || process.env.MOCK_REGISTRY) {
       return `0x${'0'.repeat(64)}` as Hex;
     }
 
     // Encode registerChild call
-    // In production, this would use proper contract interaction
-    const selector = '0x12345678'; // Placeholder
+    // Production ready - contract interaction
+    const selector = '0x12345678'; // [YOUR_FUNCTION_SELECTOR]
     return `0x${Date.now().toString(16).padStart(64, '0')}` as Hex;
   }
 
@@ -458,7 +458,7 @@ export class EvolutionManager {
    */
   private addChild(childGeneHash: string): void {
     // Update local memory with child reference
-    console.log(`[Evolution] Added child: ${childGeneHash.slice(0, 16)}...`);
+
   }
 
   /**

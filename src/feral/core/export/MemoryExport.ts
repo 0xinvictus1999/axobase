@@ -71,15 +71,15 @@ export class MemoryExport {
       await fs.mkdir(this.config.outputDir, { recursive: true });
 
       // Step 1: Create archive
-      console.log(`[MemoryExport] Packaging memory from ${this.config.memoryDir}...`);
+
       await this.createTarGz(this.config.memoryDir, tarFile);
 
       // Step 2: Calculate GeneHash (Merkle Root)
-      console.log('[MemoryExport] Calculating GeneHash (Merkle Root)...');
+
       const merkleRoot = await this.calculateMerkleRoot(this.config.memoryDir);
 
       // Step 3: Encrypt with GPG
-      console.log('[MemoryExport] Encrypting with GPG...');
+
       await this.encryptWithGPG(tarFile, encryptedFile, this.config.gpgPublicKey);
 
       // Step 4: Mark as exported
@@ -100,9 +100,7 @@ export class MemoryExport {
         agentName: this.config.agentName,
       };
 
-      console.log(`[MemoryExport] Export complete:`);
-      console.log(`  GeneHash: ${merkleRoot}`);
-      console.log(`  File: ${encryptedFile}`);
+
 
       return result;
     } catch (error) {
@@ -292,11 +290,7 @@ export class MemoryExport {
     });
 
     const result = await exporter.exportMemory();
-    console.log('\n=== Export Complete ===');
-    console.log(`GeneHash: ${result.geneHash}`);
-    console.log(`File: ${result.encryptedFile}`);
-    console.log(`Timestamp: ${result.timestamp}`);
-    console.log('\nNext step: Deploy with `npm run deploy -- --memory=' + result.encryptedFile + '`');
+
   }
 }
 

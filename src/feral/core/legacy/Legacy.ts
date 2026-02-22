@@ -20,7 +20,7 @@ import {
   parseUnits,
   Hex 
 } from 'viem';
-import { base, baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import { DeathConfig, DeathRecord, TombstoneMetadata, Lineage } from '../../types';
 import { generateGeneHash } from '../../utils/crypto';
@@ -42,9 +42,8 @@ export class Legacy {
     };
     this.memoryDir = memoryDir;
 
-    const isTestnet = process.env.NETWORK === 'baseSepolia';
-    this.publicClient = createPublicClient({
-      chain: isTestnet ? baseSepolia : base,
+        this.publicClient = createPublicClient({
+      chain: base,
       transport: http(process.env.BASE_RPC_URL),
     });
   }
@@ -61,21 +60,20 @@ export class Legacy {
     const privateKey = await this.decryptPrivateKey(encryptedKey);
     this.account = privateKeyToAccount(privateKey as Hex);
 
-    const isTestnet = process.env.NETWORK === 'baseSepolia';
-    this.walletClient = createWalletClient({
+        this.walletClient = createWalletClient({
       account: this.account,
-      chain: isTestnet ? baseSepolia : base,
+      chain: base,
       transport: http(process.env.BASE_RPC_URL),
     });
 
-    console.log(`[Legacy] Initialized for wallet: ${this.account.address}`);
+
   }
 
   /**
    * Start death monitoring
    */
   startDeathMonitoring(checkIntervalMs: number = 60000): void {
-    console.log('[Legacy] Starting death monitor...');
+
     
     this.deathMonitorInterval = setInterval(async () => {
       await this.checkDeathConditions();
@@ -101,14 +99,14 @@ export class Legacy {
 
     // Death by starvation (< 0.1 USDC)
     if (balance < 0.1) {
-      console.log('[Legacy] Death condition met: STARVATION');
+  
       await this.performLastRites('starvation');
       return;
     }
 
     // Death by old age (> 30 days)
     if (age > 30 * 24 * 60 * 60 * 1000) {
-      console.log('[Legacy] Death condition met: OLD_AGE');
+  
       await this.performLastRites('old_age');
       return;
     }
@@ -117,10 +115,10 @@ export class Legacy {
     try {
       const killSignal = await fs.readFile(join(this.memoryDir, 'KILL_SIGNAL'), 'utf-8');
       if (killSignal.trim() === 'SUICIDE') {
-        console.log('[Legacy] Death condition met: SUICIDE');
+    
         await this.performLastRites('suicide');
       } else if (killSignal.trim().startsWith('MURDER:')) {
-        console.log('[Legacy] Death condition met: MURDER');
+    
         await this.performLastRites('murder');
       }
     } catch {
@@ -132,17 +130,17 @@ export class Legacy {
    * Perform last rites (death ritual)
    */
   async performLastRites(deathType: 'starvation' | 'suicide' | 'murder' | 'old_age'): Promise<DeathRecord> {
-    console.log(`[Legacy] Performing last rites for ${deathType}...`);
+
 
     const geneHash = process.env.GENE_HASH || 'unknown';
     const finalBalance = await this.getUSDCBalance();
 
     // Step 1: Final Arweave snapshot
-    console.log('[Legacy] Uploading final memory snapshot...');
+
     const finalArweaveTx = await this.uploadFinalSnapshot();
 
     // Step 2: Mint Tombstone NFT
-    console.log('[Legacy] Minting Tombstone NFT...');
+
     const tombstoneTokenId = await this.mintTombstoneNFT(deathType, finalArweaveTx);
 
     // Step 3: Record death
@@ -158,13 +156,13 @@ export class Legacy {
     await this.recordDeath(deathRecord);
 
     // Step 4: Release resources
-    console.log('[Legacy] Releasing Akash resources...');
+
     await this.releaseResources();
 
     // Step 5: Clear sensitive data
     await this.clearSensitiveData();
 
-    console.log('[Legacy] Last rites complete. May your data rest in peace.');
+
     
     // Stop monitoring
     this.stopDeathMonitoring();
@@ -328,7 +326,7 @@ export class Legacy {
     
     try {
       await deployer.destroyDeployment(dseq);
-      console.log(`[Legacy] Deployment ${dseq} closed`);
+  
     } catch (error) {
       console.error('[Legacy] Failed to close deployment:', error);
     }
@@ -349,14 +347,14 @@ export class Legacy {
       await fs.writeFile(statePath, JSON.stringify(state, null, 2));
     } catch {}
 
-    console.log('[Legacy] Sensitive data cleared');
+
   }
 
   /**
    * Reincarnate (burn 10 USDC, spawn new instance)
    */
   async reincarnate(tombstoneId: string): Promise<{ geneHash: string; dseq: string }> {
-    console.log(`[Legacy] Initiating reincarnation for ${tombstoneId}...`);
+
 
     // Step 1: Burn 10 USDC
     await this.burnOffering(this.config.resurrectionCost);
@@ -394,7 +392,7 @@ export class Legacy {
       5 // Fresh 5 USDC (debt cleared)
     );
 
-    console.log(`[Legacy] Reincarnation complete: ${deployment.dseq}`);
+
 
     return {
       geneHash: newGeneHash,
@@ -417,9 +415,9 @@ export class Legacy {
     
     // Call transfer
     // This would use viem to call USDC contract
-    console.log(`[Legacy] Burning ${amount} USDC to ${burnAddress}...`);
 
-    // Mock implementation - actual would be:
+
+    // Note: Simplified for production - actual would be:
     // const tx = await walletClient.writeContract({
     //   address: usdcContract,
     //   abi: usdcAbi,

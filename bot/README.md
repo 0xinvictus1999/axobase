@@ -8,8 +8,8 @@ Axobase 放养平台 - Telegram 交互入口
 
 ```
 Chain ID: 84532
-Network: Base Sepolia Testnet
-RPC: https://sepolia.base.org
+Network: Base Mainnet
+RPC: https://mainnet.base.org
 ```
 
 ## 功能
@@ -50,7 +50,7 @@ cp .env.example .env
 TELEGRAM_BOT_TOKEN=your_token_from_botfather
 PLATFORM_API_URL=http://localhost:8000
 ENCRYPTION_KEY=your_32byte_encryption_key_base64
-BASE_SEPOLIA_RPC=https://sepolia.base.org
+BASE_MAINNET_RPC=https://mainnet.base.org
 ```
 
 ## 安装依赖

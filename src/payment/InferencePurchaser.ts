@@ -83,7 +83,7 @@ export class InferencePurchaser {
       throw new Error('No available providers with sufficient balance');
     }
 
-    console.log(`[InferencePurchaser] Selected provider: ${selectedQuote.provider.name}`);
+
 
     // Execute request
     try {
@@ -93,20 +93,20 @@ export class InferencePurchaser {
         return await this.fetchWithApiKey(selectedQuote.provider, request, taskId);
       }
     } catch (error) {
-      console.error(`[InferencePurchaser] Failed with ${selectedQuote.provider.name}:`, error);
+      // Primary provider failed - will try fallback
       
       // Try next available provider
       const fallbackQuotes = sortedQuotes.filter(q => q.provider.name !== selectedQuote!.provider.name);
       for (const fallback of fallbackQuotes) {
         try {
-          console.log(`[InferencePurchaser] Trying fallback: ${fallback.provider.name}`);
+      
           if (fallback.supportsX402) {
             return await this.fetchWithX402(fallback.provider, request, taskId);
           } else {
             return await this.fetchWithApiKey(fallback.provider, request, taskId);
           }
         } catch (fallbackError) {
-          console.error(`[InferencePurchaser] Fallback ${fallback.provider.name} failed:`, fallbackError);
+          // Fallback provider failed - continue to next fallback
         }
       }
 
@@ -203,7 +203,7 @@ export class InferencePurchaser {
     request: InferenceRequest,
     taskId: string
   ): Promise<InferenceResponse> {
-    console.log(`[InferencePurchaser] Requesting inference from ${provider.name} with x402`);
+
 
     // First request without payment to get 402
     let response = await axios({
@@ -277,7 +277,7 @@ export class InferencePurchaser {
     request: InferenceRequest,
     taskId: string
   ): Promise<InferenceResponse> {
-    console.log(`[InferencePurchaser] Requesting inference from ${provider.name} with API key`);
+
 
     const apiKey = this.getApiKey(provider);
     if (!apiKey) {

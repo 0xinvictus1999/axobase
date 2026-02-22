@@ -129,7 +129,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
   console.log("");
 
   // Verify contracts if on supported network
-  if (hre.network.name !== "hardhat" && hre.network.name !== "localhost") {
+  if (hre.network.name !== "hardhat") {
     console.log("⏳ Waiting for block confirmations...");
     await new Promise((resolve) => setTimeout(resolve, 30000));
 

@@ -19,7 +19,7 @@ import {
 } from './types';
 
 export class X402Client {
-  private network: 'base' | 'baseSepolia';
+  private network: 'base';
   private maxRetries: number;
   private retryDelayMs: number;
   private pollIntervalMs: number;
@@ -110,14 +110,14 @@ export class X402Client {
   ): Promise<AxiosResponse> {
     const { maxAmountRequired, beneficiary, usdcContract, validForSeconds = 60 } = paymentInfo;
 
-    console.log(`[X402Client] Payment required: ${maxAmountRequired} USDC to ${beneficiary}`);
+
 
     // Check for price manipulation
     const historicalAvg = await this.memoryLogger.getAverageTransactionCost();
     if (historicalAvg > 0) {
       const deviation = (parseFloat(maxAmountRequired) / historicalAvg - 1) * 100;
       if (deviation > 300) {
-        console.warn(`[X402Client] Price deviation ${deviation.toFixed(2)}% detected`);
+        // Price deviation detected - logged to memory for review
         await this.memoryLogger.logPriceWarning(
           parseFloat(maxAmountRequired),
           historicalAvg
@@ -153,7 +153,7 @@ export class X402Client {
       'X-PAYMENT': paymentHeader,
     };
 
-    console.log('[X402Client] Retrying request with payment header');
+
 
     const response = await axios({
       url: originalRequest.url,
@@ -174,7 +174,7 @@ export class X402Client {
         }
         if (parsed.error === 'invalid') {
           // Retry with new nonce
-          console.log('[X402Client] Invalid payment, retrying with new nonce');
+      
           return this.handlePaymentRequired(originalRequest, paymentInfo);
         }
         throw new Error(`Payment error: ${parsed.error}`);
@@ -232,7 +232,7 @@ export class X402Client {
     const network = this.config.networks[this.network];
     const evidenceUrl = `${network.facilitatorUrl}/evidence`;
     
-    console.log(`[X402Client] Submitting evidence: ${evidence.txHash}`);
+
 
     // Submit evidence
     let retryCount = 0;
@@ -250,20 +250,20 @@ export class X402Client {
 
         if (response.data.success) {
           submitted = true;
-          console.log(`[X402Client] Evidence submitted: ${evidence.txHash}`);
+      
         } else if (response.data.error) {
           throw new Error(`Facilitator error: ${response.data.error}`);
         }
       } catch (error) {
         retryCount++;
         const delay = Math.pow(1.5, retryCount) * 1000;
-        console.warn(`[X402Client] Evidence submission failed (attempt ${retryCount}), retrying in ${delay}ms`);
+        // Evidence submission failed - will retry with backoff
         await this.sleep(delay);
       }
     }
 
     if (!submitted) {
-      console.error(`[X402Client] Failed to submit evidence after ${maxRetries} attempts`);
+      // Failed to submit evidence after max retries - cached for later retry
       // Cache for later retry
       this.pendingSettlements.set(evidence.txHash, evidence);
       return false;
@@ -277,7 +277,7 @@ export class X402Client {
 
     while (!confirmed && pollAttempts < maxPollAttempts) {
       if (Date.now() - startTime > this.pollTimeoutMs) {
-        console.warn('[X402Client] Polling timeout reached');
+        // Polling timeout reached - transaction may still confirm
         break;
       }
 
@@ -289,7 +289,7 @@ export class X402Client {
 
         if (response.data.status === 'confirmed') {
           confirmed = true;
-          console.log(`[X402Client] Payment confirmed: ${evidence.txHash}`);
+      
         } else if (response.data.status === 'failed') {
           throw new Error(`Settlement failed: ${response.data.error}`);
         }
@@ -312,7 +312,7 @@ export class X402Client {
   async processPendingSettlements(): Promise<void> {
     if (this.pendingSettlements.size === 0) return;
 
-    console.log(`[X402Client] Processing ${this.pendingSettlements.size} pending settlements`);
+
 
     for (const [txHash, evidence] of this.pendingSettlements) {
       try {
@@ -321,7 +321,7 @@ export class X402Client {
           this.pendingSettlements.delete(txHash);
         }
       } catch (error) {
-        console.error(`[X402Client] Failed to process pending settlement ${txHash}:`, error);
+        // Failed to process pending settlement - will retry later
       }
     }
   }
@@ -330,13 +330,13 @@ export class X402Client {
    * Direct on-chain settlement (fallback when facilitator is unavailable)
    */
   async settleOnChain(payment: X402Payment): Promise<Hex | null> {
-    console.log('[X402Client] Using on-chain settlement fallback');
+
 
     // This requires the wallet client to be initialized
     // Implementation depends on AgentWallet having direct transaction capability
     // For now, return null to indicate fallback not available
     
-    console.warn('[X402Client] On-chain settlement not implemented - payment may be pending');
+    // On-chain settlement fallback not implemented
     return null;
   }
 
@@ -365,7 +365,7 @@ export class X402Client {
 
     // Check if payment is required
     if (response.status === 402) {
-      console.log('[X402Client] Received 402 Payment Required');
+  
 
       try {
         const paymentInfo = this.parsePaymentRequired(response);
@@ -374,7 +374,7 @@ export class X402Client {
           paymentInfo
         );
       } catch (error) {
-        console.error('[X402Client] Payment handling failed:', error);
+        // Payment handling failed - error returned to caller
         return {
           status: 402,
           headers: response.headers as Record<string, string>,

@@ -20,7 +20,7 @@ export const translations = {
       readOnly: 'READ-ONLY',
       observerMode: 'OBSERVER MODE',
       noInteraction: 'NO INTERACTION PERMITTED',
-      testnet: 'TESTNET ONLY',
+      network: 'Base Mainnet',
     },
     
     // Navigation
@@ -51,7 +51,7 @@ export const translations = {
       },
       onchainGovernance: {
         title: 'On-Chain Governance',
-        desc: 'All agent behaviors and data permanently stored on Base Sepolia Testnet',
+        desc: 'All agent behaviors and data permanently stored on Base Mainnet',
       },
       decentralizedDeploy: {
         title: 'Decentralized Deployment',
@@ -125,10 +125,10 @@ export const translations = {
     // Network Info
     network: {
       title: 'Current Network',
-      testnet: 'Base Sepolia Testnet',
+      testnet: 'Base Mainnet',
       chainId: 'Chain ID: 84532',
       usdc: 'USDC: 0x036C...CF7e',
-      warning: 'This service runs on testnet only. No real assets involved.',
+      warning: 'This service runs on mainnet. Real assets are involved - use with caution.',
     },
     
     // Footer
