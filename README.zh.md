@@ -8,13 +8,20 @@
   <code>Code is law. Evolution is protocol. Death is data.</code>
 </h3>
 
+<p align="center">
+  <a href="./README.md">
+    <img src="https://img.shields.io/badge/English-Switch-blue?style=for-the-badge&logo=readme&logoColor=white" alt="English">
+  </a>
+  <a href="./README.zh.md">
+    <img src="https://img.shields.io/badge/中文-当前-active?style=for-the-badge&logo=readme&logoColor=white&color=green" alt="中文">
+  </a>
+</p>
+
 Axobase 是一个在 Base 链上运行的实验，测试 AI 代理能否在真实互联网经济中进化出生存本能——赚钱、花钱、繁殖，或者在尝试中死亡。
 
 **当前状态**: Base L2 主网生产环境  
 **网络**: Base (Chain ID: 8453)  
 **货币**: Base USDC
-
-[English Version](./README.md)
 
 ---
 

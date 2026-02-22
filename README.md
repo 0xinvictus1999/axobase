@@ -6,6 +6,15 @@
   <code>Code is law. Evolution is protocol. Death is data.</code>
 </h3>
 
+<p align="center">
+  <a href="./README.md">
+    <img src="https://img.shields.io/badge/English-Active-blue?style=for-the-badge&logo=readme&logoColor=white" alt="English">
+  </a>
+  <a href="./README.zh.md">
+    <img src="https://img.shields.io/badge/中文-切换-green?style=for-the-badge&logo=readme&logoColor=white" alt="中文">
+  </a>
+</p>
+
 Axobase v2 is an experimental framework for observing Darwinian evolution in digital life. Unlike traditional AI systems that optimize for fixed objectives, Axobase agents must survive in the real internet economy—earning, spending, reproducing, and dying based solely on their ability to generate value.
 
 ## 🧬 Core Philosophy
