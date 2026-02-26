@@ -7,7 +7,7 @@ import "../src/AxoRite.sol";
 /**
  * @title Deploy
  * @dev AxoRite 合约部署脚本
- * @notice 部署到 Base Sepolia 测试网
+ * @notice 部署�?Base Sepolia 测试�?
  * 
  * 使用方法:
  * 1. 设置环境变量: export PRIVATE_KEY=your_private_key
@@ -26,19 +26,19 @@ contract Deploy is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
         
-        // 读取或设置平台地址 (默认使用部署者)
+        // 读取或设置平台地址 (默认使用部署�?
         address platformAddress = vm.envOr("PLATFORM_ADDRESS", deployer);
         
-        console.log("========================================");
-        console.log("AxoRite Contract Deployment");
-        console.log("========================================");
-        console.log("Deployer:", deployer);
-        console.log("Platform Address:", platformAddress);
-        console.log("Expected USDC:", USDC_ADDRESS);
-        console.log("Chain ID:", block.chainid);
-        console.log("========================================");
         
-        // 验证链 ID
+        
+        
+        
+        
+        
+        
+        
+        
+        // 验证�?ID
         require(
             block.chainid == BASE_SEPOLIA_CHAIN_ID,
             string.concat(
@@ -50,7 +50,7 @@ contract Deploy is Script {
             )
         );
         
-        // 开始广播交易
+        // 开始广播交�?
         vm.startBroadcast(deployerPrivateKey);
         
         // 部署合约
@@ -59,16 +59,16 @@ contract Deploy is Script {
         vm.stopBroadcast();
         
         // 输出部署信息
-        console.log("\n========================================");
-        console.log("Deployment Successful!");
-        console.log("========================================");
-        console.log("Contract Address:", address(feralRite));
-        console.log("Owner:", feralRite.owner());
-        console.log("Platform:", feralRite.platformAddress());
-        console.log("USDC Address:", feralRite.usdcAddress());
-        console.log("========================================");
         
-        // 保存部署信息到文件
+        
+        
+        
+        
+        
+        
+        
+        
+        // 保存部署信息到文�?
         _saveDeployment(address(feralRite), deployer, platformAddress);
         
         // 验证部署
@@ -76,7 +76,7 @@ contract Deploy is Script {
     }
     
     /**
-     * @dev 保存部署信息到 broadcast 目录
+     * @dev 保存部署信息�?broadcast 目录
      */
     function _saveDeployment(
         address contractAddress,
@@ -101,7 +101,7 @@ contract Deploy is Script {
         string memory broadcastDir = "./broadcast";
         vm.createDir(broadcastDir, true);
         
-        // 保存到文件
+        // 保存到文�?
         string memory filename = string.concat(
             broadcastDir, 
             "/deploy-", 
@@ -110,21 +110,21 @@ contract Deploy is Script {
         );
         
         vm.writeFile(filename, deploymentInfo);
-        console.log("\nDeployment info saved to:", filename);
+        
     }
     
     /**
      * @dev 验证部署结果
      */
     function _verifyDeployment(AxoRite feralRite) internal view {
-        console.log("\n--- Deployment Verification ---");
+        
         
         // 验证 USDC 地址
         require(
             feralRite.usdcAddress() == USDC_ADDRESS,
             "USDC address mismatch!"
         );
-        console.log("[OK] USDC address verified");
+        
         
         // 验证合约代码存在
         uint256 codeSize;
@@ -133,8 +133,8 @@ contract Deploy is Script {
             codeSize := extcodesize(contractAddr)
         }
         require(codeSize > 0, "No contract code deployed!");
-        console.log("[OK] Contract code deployed");
         
-        console.log("--- All checks passed! ---");
+        
+        
     }
 }
